@@ -602,7 +602,7 @@
 
         /* Karakter Seçim Ekranı */
         .character-selection-screen {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.7) 0%, rgba(10, 10, 10, 0.8) 100%); /* Opaklık azaltıldı */
             border: 2px solid var(--neon-cyan);
             border-radius: 20px;
             box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(0, 255, 255, 0.1);
@@ -641,7 +641,7 @@
         }
 
         .character-selection-card {
-            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.6), rgba(26, 26, 26, 0.7)); /* Arka plan şeffaflığı artırıldı */
             border: 2px solid var(--neon-purple);
             border-radius: 15px;
             padding: 15px;
@@ -691,13 +691,14 @@
         }
 
         .character-selection-card h3 {
-            font-family: 'Orbitron', monospace;
+            font-family: 'Rajdhani', sans-serif; /* Font güncellendi */
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--neon-cyan);
         }
 
         .character-selection-card p {
+            font-family: 'Rajdhani', sans-serif; /* Font güncellendi */
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--neon-green);
@@ -869,6 +870,11 @@
 
             #intro-player-name {
                 font-size: 1.8rem;
+            }
+
+            /* Mobil dikeyde üst boşluk ayarı */
+            .character-selection-screen {
+                margin-top: 50px; /* Üstten boşluk eklendi */
             }
         }
     </style>
