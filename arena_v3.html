@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Karakter Savaşı - Cyberpunk Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Değişkenleri */
+        :root {
+            --neon-pink: #ff0080;
+            --neon-cyan: #00ffff;
+            --neon-purple: #8000ff;
+            --neon-green: #00ff41;
+            --neon-orange: #ff8000;
+            --cyber-dark: #0a0a0a;
+            --cyber-darker: #050505;
+            --cyber-light: #1a1a1a;
+            --cyber-grid: #333333;
+        }
+
+        /* Temel Sıfırlamalar ve Genel Stiller */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Siber Arka Plan Efekti */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-color: #0a0a0a;
+            background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px), radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px), radial-gradient(circle at 40% 50%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 100px 100px, 120px 120px, 80px 80px;
+            background-repeat: repeat;
+            animation: space-move 60s linear infinite;
+        }
+
+        @keyframes space-move {
+            0% {
+                background-position: 0 0, 0 0, 0 0;
+            }
+            100% {
+                background-position: 1000px 1000px, 1200px 1200px, 800px 800px;
+            }
+        }
+
+        /* Parçacık Efekti */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: star-flicker 2s infinite ease-in-out;
+        }
+
+        @keyframes star-flicker {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0.8;
+                transform: translateY(-20px) scale(1.1);
+            }
+            50% {
+                opacity: 0.2;
+                transform: translateY(-40px) scale(0.9);
+            }
+            75% {
+                opacity: 1;
+                transform: translateY(-60px) scale(1.2);
+            }
+            100% {
+                transform: translateY(-80px) rotate(180deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Oyun Konteyneri */
+        .game-container {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(10, 10, 10, 0.6) 100%);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            display: none; /* Başlangıçta gizli */
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-container::before {
+            content: none; /* Bu pseudo-element'i kaldırıyoruz */
+        }
+
+        /* Oyun Başlığı */
+        .game-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            margin-bottom: 30px;
+            animation: title-pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes title-pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.02);
+            }
+        }
+
+        /* Ana Oyun İçeriği Düzeni */
+        .main-game-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .player-areas-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+            flex-grow: 1;
+            max-width: 800px;
+        }
+
+        /* Oyuncu Alanları */
+        .player-area {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.4) 0%, rgba(10, 10, 10, 0.5) 100%);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #player1-area {
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 15px rgba(128, 0, 255, 0.2), inset 0 0 10px rgba(128, 0, 255, 0.1);
+        }
+
+        #player2-area {
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+        }
+
+        .player-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .player-area:hover::before {
+            left: 100%;
+        }
+
+        .current-player-glow {
+            border-color: var(--neon-pink) !important;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.8), inset 0 0 30px rgba(255, 0, 128, 0.2);
+            animation: current-player-pulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes current-player-pulse {
+            0% {
+                box-shadow: 0 0 30px rgba(255, 0, 128, 0.8), inset 0 0 30px rgba(255, 0, 128, 0.2);
+                transform: scale(1);
+            }
+            100% {
+                box-shadow: 0 0 50px rgba(255, 0, 128, 1), inset 0 0 50px rgba(255, 0, 128, 0.4);
+                transform: scale(1.02);
+            }
+        }
+
+        /* Oyuncu Bilgisi (Üst Kısım) */
+        .player-info-top {
+            width: 100%;
+            text-align: center;
+        }
+
+        .player-info-top h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        /* Can Barı */
+        .hp-bar-container {
+            width: 80%;
+            height: 20px;
+            background: linear-gradient(135deg, #222, #111);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hp-bar {
+            height: 100%;
+            background: linear-gradient(45deg, var(--neon-green), #00ff80);
+            border-radius: 8px;
+            transition: width 0.8s ease-out;
+            position: relative;
+            animation: hp-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes hp-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+            }
+        }
+
+        .hp-bar.low-hp {
+            background: linear-gradient(45deg, var(--neon-pink), #ff4080);
+            animation: hp-danger 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes hp-danger {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 0, 128, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 0, 128, 1);
+            }
+        }
+
+        /* Karakter Kartı Görseli */
+        .character-card-visual {
+            width: 280px;
+            height: 380px;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 3px solid var(--neon-purple);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            flex-grow: 0;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(128, 0, 255, 0.3), inset 0 0 10px rgba(128, 0, 255, 0.1);
+        }
+
+        .character-card-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            animation: card-rotate 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes card-rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .character-card-visual:hover {
+            transform: scale(1.05);
+        }
+
+        .character-card-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            filter: brightness(1.1) contrast(1.2);
+        }
+
+        /* Karakter Bilgisi (Alt Kısım) */
+        .character-info-bottom {
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(26, 26, 26, 0.8));
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .character-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            margin-bottom: 10px;
+            animation: name-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes name-glow {
+            0% {
+                text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(0, 255, 255, 1);
+            }
+        }
+
+        .character-stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .character-stat-item {
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(128, 0, 255, 0.1));
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .character-stat-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .character-stat-value {
+            color: var(--neon-green);
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.8);
+        }
+
+        /* Oyun Mesajları */
+        .game-messages {
+            background: rgba(10, 10, 10, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--neon-orange);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 80%;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 10px rgba(255, 128, 0, 0.8);
+            border: 1px solid var(--neon-orange);
+        }
+
+        .game-messages::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 128, 0, 0.00), transparent);
+            animation: message-scan 3s ease-in-out infinite;
+        }
+
+        @keyframes message-scan {
+            0%, 100% {
+                left: -100%;
+            }
+            50% {
+                left: 100%;
+            }
+        }
+
+        /* Oyun Butonları Yan Çubuk */
+        .game-buttons-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            min-width: 180px;
+            align-items: center;
+        }
+
+        /* Genel Oyun Buton Stili */
+        .game-button {
+            font-family: 'Orbitron', monospace;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(255, 0, 128, 0.3);
+        }
+
+        .game-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .game-button:hover::before {
+            left: 100%;
+        }
+
+        .game-button:hover {
+            transform: translateY(-3px);
+            border-color: var(--neon-cyan);
+        }
+
+        .game-button:active {
+            transform: translateY(0);
+        }
+
+        .game-button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Saldırı Butonu */
+        #attack-button {
+            background: linear-gradient(45deg, rgba(255, 0, 128, 0.3), rgba(204, 0, 102, 0.3));
+            border: 2px solid rgba(255, 0, 128, 0.6);
+            box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+        }
+
+        #attack-button:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.7), 0 0 40px rgba(255, 0, 128, 0.5);
+            border-color: rgba(255, 0, 128, 1);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* Güçlen Butonu */
+        #buff-button {
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.3), rgba(0, 204, 204, 0.3));
+            border: 2px solid rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        #buff-button:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7), 0 0 40px rgba(0, 255, 255, 0.5);
+            border-color: rgba(0, 255, 255, 1);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* Animasyonlar */
+        @keyframes target-shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-8px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(8px);
+            }
+        }
+
+        @keyframes target-hit-flash {
+            0%, 100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(2) saturate(2) hue-rotate(300deg);
+            }
+        }
+
+        .character-card-visual.hit {
+            animation: target-shake 0.5s ease-in-out, target-hit-flash 0.4s ease-out;
+        }
+
+        @keyframes attacker-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 0, 128, 1);
+            }
+        }
+
+        .character-card-visual.attacking {
+            animation: attacker-glow 0.8s ease-in-out;
+        }
+
+        @keyframes buff-pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 65, 1);
+                transform: scale(1.02);
+            }
+        }
+
+        .character-card-visual.buffed-animation {
+            animation: buff-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes winning-card-animation {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            }
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 60px rgba(0, 255, 255, 1), inset 0 0 40px rgba(0, 255, 255, 0.6);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            }
+        }
+
+        .character-card-visual.winner-animation {
+            animation: winning-card-animation 2s ease-in-out forwards;
+        }
+
+        /* Karakter Seçim Ekranı */
+        .character-selection-screen {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(10, 10, 10, 0.98) 100%);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(0, 255, 255, 0.1);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 1000px;
+            width: 90%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .character-selection-screen h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .character-selection-card {
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-selection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .character-selection-card:hover::before {
+            left: 100%;
+        }
+
+        .character-selection-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(128, 0, 255, 0.7);
+            border-color: var(--neon-pink);
+        }
+
+        .character-selection-card.selected {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.9);
+            transform: scale(1.03);
+        }
+
+        .character-selection-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid var(--neon-cyan);
+        }
+
+        .character-selection-card h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+        }
+
+        .character-selection-card p {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);
+        }
+
+        .start-game-button-selection {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(45deg, #00cc66, #00aacc);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid #009944;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .start-game-button-selection:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.5);
+            border-color: var(--neon-purple);
+        }
+
+        .start-game-button-selection.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Savaş Giriş Ekranı */
+        #battle-intro-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out;
+            border-radius: 20px;
+        }
+
+        #intro-player-card {
+            width: 300px;
+            height: 400px;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 1s ease-out, opacity 1s ease-out;
+            box-shadow: 0 0 50px rgba(128, 0, 255, 0.8), inset 0 0 30px rgba(128, 0, 255, 0.4);
+            border-color: var(--neon-purple);
+        }
+
+        #intro-player-card img {
+            filter: brightness(1.3) contrast(1.5) drop-shadow(0 0 15px rgba(128, 0, 255, 0.7));
+        }
+
+        #intro-player-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neon-pink);
+            text-shadow: 0 0 20px rgba(255, 0, 128, 0.9);
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.8s ease-out 0.5s;
+        }
+
+        /* Duyarlı Tasarım (Mobil Uyumlu) */
+        @media (max-width: 768px) {
+            .game-container, .character-selection-screen {
+                margin: 10px auto;
+                padding: 10px;
+                width: 98%;
+                max-width: none;
+            }
+
+            .game-title, .character-selection-screen h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            .main-game-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .player-areas-wrapper {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .player-area {
+                width: 95%;
+                max-width: 350px;
+            }
+
+            .player-info-top h2 {
+                font-size: 1.5rem;
+            }
+
+            .hp-bar-container {
+                width: 90%;
+            }
+
+            .character-card-visual {
+                width: 180px;
+                height: 250px;
+            }
+
+            .character-name {
+                font-size: 1rem;
+            }
+
+            .character-stats {
+                font-size: 0.8rem;
+                gap: 5px;
+            }
+
+            .character-stat-item {
+                padding: 3px 8px;
+            }
+
+            .game-messages {
+                font-size: 0.9rem;
+                padding: 15px;
+                max-width: 98%;
+                min-height: 60px;
+            }
+
+            .game-buttons-sidebar {
+                width: 90%;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .game-button, .start-game-button-selection {
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .character-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+
+            .character-selection-card img {
+                width: 100px;
+                height: 100px;
+            }
+
+            #intro-player-card {
+                width: 250px;
+                height: 350px;
+            }
+
+            #intro-player-name {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-background"></div>
+    <div class="particles"></div>
+
+    <!-- Karakter Seçim Ekranı -->
+    <div class="character-selection-screen" id="character-selection-screen">
+        <h1>NFT KARAKTERİNİ SEÇ</h1>
+        <p class="text-gray-400 text-sm mb-4">Cüzdan Adresiniz: <span id="displayWalletAddress" class="text-neon-cyan font-bold">Yükleniyor...</span></p>
+        <div class="character-grid" id="character-grid">
+            <p class="text-center text-gray-500 col-span-full" id="loading-nfts">NFT'ler yükleniyor...</p>
+        </div>
+        <button id="select-character-button" class="start-game-button-selection disabled" disabled>SAVAŞA BAŞLA</button>
+    </div>
+
+    <!-- Oyun Konteyneri -->
+    <div class="game-container" id="game-container">
+        <h1 class="game-title">NFT BATTLE ARENA</h1>
+
+        <!-- Savaş Giriş Ekranı -->
+        <div id="battle-intro-screen">
+            <h2 class="text-3xl font-orbitron text-neon-cyan mb-8">Savaş Başlıyor!</h2>
+            <div id="intro-player-card" class="character-card-visual"></div>
+            <p id="intro-player-name"></p>
+        </div>
+
+        <!-- Ana Oyun İçeriği -->
+        <div class="main-game-content">
+            <div class="player-areas-wrapper">
+                <!-- Oyuncu 2 (Rakip) Alanı -->
+                <div class="player-area" id="player2-area">
+                    <div class="player-info-top">
+                        <h2 id="player2-name-display">RAKİP</h2>
+                        <p class="text-lg font-bold mb-2"><span id="player2-hp" style="color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);">100</span> HP</p>
+                        <div class="hp-bar-container">
+                            <div id="player2-hp-bar" class="hp-bar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="character-card-visual" id="player2-character-card-visual"></div>
+                    <div class="character-info-bottom">
+                        <div class="character-name" id="player2-character-name"></div>
+                        <div class="character-stats" id="player2-character-stats"></div>
+                    </div>
+                </div>
+                <!-- Oyuncu 1 (Sen) Alanı -->
+                <div class="player-area" id="player1-area">
+                    <div class="player-info-top">
+                        <h2 id="player1-name-display">SEN</h2>
+                        <p class="text-lg font-bold mb-2"><span id="player1-hp" style="color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);">100</span> HP</p>
+                        <div class="hp-bar-container">
+                            <div id="player1-hp-bar" class="hp-bar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="character-card-visual" id="player1-character-card-visual"></div>
+                    <div class="character-info-bottom">
+                        <div class="character-name" id="player1-character-name"></div>
+                        <div class="character-stats" id="player1-character-stats"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Oyun Butonları -->
+            <div class="game-buttons-sidebar">
+                <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLAT</button>
+                <button id="attack-button" class="game-button hidden">SALDIRI</button>
+                <button id="buff-button" class="game-button hidden">GÜÇLEN</button>
+                <button id="restart-button" class="game-button hidden">YENİDEN</button>
+            </div>
+        </div>
+        <!-- Oyun Mesajları Alanı -->
+        <div class="game-messages" id="game-messages">SAVAŞ BAŞLADI! SIRA SENDE.</div>
+    </div>
+    <!-- JavaScript dosyanızı buraya bağlayın -->
+    <script src="YOUR_JS_FILE_PATH/game.js"></script>
+</body>
+</html>
