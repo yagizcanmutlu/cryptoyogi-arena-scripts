@@ -187,8 +187,11 @@ const AIRTABLE_USER_TABLE_NAME = 'user_list';
 async function fetchNFTsFromAirtable(walletAddress = null) {
     let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_NFT_TABLE_NAME}`;
     if (walletAddress) {
-        url += `?filterByFormula={wallet}='${walletAddress}'`;
+        // Cüzdan adresini normalleştir
+        const cleanWalletAddress = walletAddress.toLowerCase().trim();
+        url += `?filterByFormula={wallet}='${cleanWalletAddress}'`;
     }
+    console.log('Airtable API URL (constructed):', url); // Debug: Oluşturulan Airtable URL'ini logla
     try {
         const response = await fetch(url, {
             headers: {
@@ -201,6 +204,7 @@ async function fetchNFTsFromAirtable(walletAddress = null) {
             throw new Error(`Airtable API hatası: Sunucudan yanıt alınamadı veya yetkilendirme sorunu (HTTP ${response.status}). Lütfen API anahtarınızın, Base ID'nizin ve tablo adınızın doğru olduğundan, ayrıca API anahtarınızın gerekli izinlere (read) sahip olduğundan ve Airtable'daki 'wallet' sütun adının doğru olduğundan emin olun.`);
         }
         const data = await response.json();
+        console.log('Airtable API Raw Response:', data); // Debug: Airtable'dan gelen ham yanıtı logla
         if (!data.records || data.records.length === 0) {
             return [];
         }
@@ -224,7 +228,9 @@ async function fetchNFTsFromAirtable(walletAddress = null) {
 // Cüzdan adresine göre kullanıcı adını çeken fonksiyon
 async function fetchUserNameByWallet(walletAddress) {
     if (!walletAddress) return null;
-    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_USER_TABLE_NAME}?filterByFormula={wallet}='${walletAddress}'`;
+    // Cüzdan adresini normalleştir
+    const cleanWalletAddress = walletAddress.toLowerCase().trim();
+    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_USER_TABLE_NAME}?filterByFormula={wallet}='${cleanWalletAddress}'`;
     try {
         const response = await fetch(url, {
             headers: {
@@ -257,6 +263,7 @@ function maskWalletAddress(address, visibleChars = 4) {
 // URL'den cüzdan adresini al
 const urlParams = new URLSearchParams(window.location.search);
 const playerWalletAddress = urlParams.get('wallet'); // URL'den cüzdanı al
+console.log('URL Wallet Address:', playerWalletAddress); // Debug: URL'den alınan cüzdan adresini logla
 
 // Oyunun başlangıç durumuna getirilmesi
 async function initializeGame() {
@@ -278,8 +285,10 @@ async function initializeGame() {
         // URL'den alınan cüzdan adresiyle NFT'leri çek
         allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri önce çek
 
-        const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet === playerWalletAddress);
-        opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet !== playerWalletAddress);
+        // Cüzdan adreslerini normalleştirerek filtrele
+        const cleanedPlayerWalletAddress = playerWalletAddress ? playerWalletAddress.toLowerCase().trim() : null;
+        const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress);
+        opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() !== cleanedPlayerWalletAddress);
 
         loadingNFTsMessage.style.display = 'none';
 
