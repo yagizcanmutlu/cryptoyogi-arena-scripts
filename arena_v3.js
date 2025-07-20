@@ -254,6 +254,10 @@ function maskWalletAddress(address, visibleChars = 4) {
     return `${address.substring(0, visibleChars)}...${address.substring(address.length - visibleChars)}`;
 }
 
+// URL'den cüzdan adresini al
+const urlParams = new URLSearchParams(window.location.search);
+const playerWalletAddress = urlParams.get('wallet'); // URL'den cüzdanı al
+
 // Oyunun başlangıç durumuna getirilmesi
 async function initializeGame() {
     gameActive = false;
@@ -263,20 +267,15 @@ async function initializeGame() {
     selectedPlayerNFT = null;
 
     setTimeout(async () => {
-        const userWalletElement = document.querySelector('[data-ms-member="cuzdan"]');
-        let playerWalletAddress = "";
-        if (userWalletElement && userWalletElement.textContent.trim() !== '') {
-            playerWalletAddress = userWalletElement.textContent.trim();
-        }
-        // Maskelenmiş cüzdan adresini göster
-        displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress);
+        // URL'den alınan cüzdan adresini göster
+        displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
 
         gameContainer.style.display = 'none';
         characterSelectionScreen.style.display = 'flex';
         loadingNFTsMessage.style.display = 'block';
         characterGrid.innerHTML = '';
 
-        // API çağrıları için tam cüzdan adresini kullan
+        // URL'den alınan cüzdan adresiyle NFT'leri çek
         allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri önce çek
 
         const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet === playerWalletAddress);
@@ -334,13 +333,8 @@ async function startGameWithSelectedNFT() {
     }
 
     let player1Name = "SEN";
-    const memberstackUsernameElement = document.querySelector('[data-ms-member="username"]');
-    const playerWalletElement = document.querySelector('[data-ms-member="cuzdan"]');
-    let playerWalletAddress = playerWalletElement ? playerWalletElement.textContent.trim() : '';
-
-    if (memberstackUsernameElement && memberstackUsernameElement.textContent.trim() !== '') {
-        player1Name = memberstackUsernameElement.textContent.trim();
-    } else if (playerWalletAddress) {
+    // Cüzdan adresine göre kullanıcı adını çek
+    if (playerWalletAddress) {
         const fetchedName = await fetchUserNameByWallet(playerWalletAddress);
         if (fetchedName) {
             player1Name = fetchedName;
