@@ -337,7 +337,7 @@ async function startGameWithSelectedNFT() {
         return; // Oyunun başlamasını engelle
     }
 
-    // Rakip NFT'lerinden rastgele birini seç
+    // Rakip NFT'lerinden rastgele birını seç
     const player2CharIndex = Math.floor(Math.random() * opponentNFTs.length);
     player2CharacterData = opponentNFTs[player2CharIndex];
     if (player2CharacterData.wallet) {
