@@ -645,8 +645,12 @@ window.addEventListener('message', async (event) => {
     const allowedOrigins = [
         'https://cryptoyogi.webflow.io',
         'https://www.cryptoyogi.com',
-        'https://yagizcanmutlu.github.io' // Kendi GitHub Pages domaininizi de ekledik
+        'https://yagizcanmutlu.github.io', // Kendi GitHub Pages domaininizi de ekledik
+        'https://www.cryptoyogi.world' // Yeni eklenen domain
     ];
+
+    console.log('Kontrol edilen Origin:', event.origin); // Yeni log
+    console.log('İzin verilen Origins:', allowedOrigins); // Yeni log
 
     if (!allowedOrigins.includes(event.origin)) {
         console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
