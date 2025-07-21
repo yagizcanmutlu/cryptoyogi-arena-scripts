@@ -126,7 +126,7 @@ const player2HpText = document.getElementById('player2-hp');
 const player2CharacterCardVisualElement = document.getElementById('player2-character-card-visual');
 const player2CharacterNameElement = document.getElementById('player2-character-name');
 const player2CharacterStatsElement = document.getElementById('player2-character-stats');
-const player2NameDisplay = document.getElementById('player2-name-display');
+const player2NameDisplay = document('player2-name-display');
 
 const gameMessagesElement = document.getElementById('game-messages');
 const startBattleButton = document.getElementById('start-battle-button');
