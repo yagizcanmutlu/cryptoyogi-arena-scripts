@@ -139,45 +139,6 @@ const introPlayerCard = document.getElementById('intro-player-card');
 const introPlayerName = document.getElementById('intro-player-name');
 const mainGameContent = document.querySelector('.main-game-content');
 
-// Varsayılan karakter havuzu (Airtable'dan NFT gelmezse kullanılır)
-const characterDataPool = [{
-    id: 'char001',
-    name: 'Alev Lordu',
-    atk: 70,
-    def: 30,
-    imageUrl: "https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/685da7b3fb481b88dd053d20_ChatGPT%20Image%206%20May%202025%2003_10_16.png"
-}, {
-    id: 'char002',
-    name: 'Şifa Perisi',
-    atk: 60,
-    def: 40,
-    imageUrl: "https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/685da7b3b67853e49329069b_11%20May%202025%2001_31_54.png"
-}, {
-    id: 'char003',
-    name: 'Cicivo',
-    atk: 55,
-    def: 45,
-    imageUrl: "https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/685dde0919d13e3af7beb51f_cicivo.png"
-}, {
-    id: 'char004',
-    name: 'Glitchbunny',
-    atk: 70,
-    def: 30,
-    imageUrl: "https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/685dddfce1c265d546d4de8c_Glitchbunny.png"
-}, {
-    id: 'char005',
-    name: 'Nympho Melis',
-    atk: 65,
-    def: 35,
-    imageUrl: "https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/685de1b90c3da4ebb26795c5_Nympho%20Melis.png"
-}, {
-    id: 'char006',
-    name: 'Syntax Error',
-    atk: 80,
-    def: 20,
-    imageUrl: "https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/685dddadecc8300342a11681_syntax_error.png"
-}];
-
 // Airtable API bilgileri
 const AIRTABLE_API_KEY = 'patNmkPQFkKD7rwMg.ad10006df9da05fea81089b46caab7f1629b474e88b8bf69d91269c58b50e211';
 const AIRTABLE_BASE_ID = 'appBuciupEMutB7Z0';
@@ -368,21 +329,24 @@ async function startGameWithSelectedNFT() {
     let player2Name = "RAKİP";
     let player2CharacterData;
 
-    if (opponentNFTs.length > 0) {
-        // Rakip NFT'lerinden rastgele birini seç
-        const player2CharIndex = Math.floor(Math.random() * opponentNFTs.length);
-        player2CharacterData = opponentNFTs[player2CharIndex];
-        if (player2CharacterData.wallet) {
-            const fetchedOpponentName = await fetchUserNameByWallet(player2CharacterData.wallet);
-            if (fetchedOpponentName) {
-                player2Name = fetchedOpponentName;
-            }
-        }
-    } else {
-        // Rakip NFT yoksa varsayılan karakter havuzundan seç
-        const player2CharIndex = Math.floor(Math.random() * characterDataPool.length);
-        player2CharacterData = characterDataPool[player2CharIndex];
+    if (opponentNFTs.length === 0) {
+        gameMessagesElement.textContent = "Rakip NFT'ler bulunamadı. Lütfen daha sonra tekrar deneyin veya NFT listesini kontrol edin.";
+        console.error("Hata: Rakip NFT'ler bulunamadı. Oyun başlatılamıyor.");
+        characterSelectionScreen.style.display = 'flex'; // Karakter seçim ekranını tekrar göster
+        gameContainer.style.display = 'none'; // Oyun konteynerini gizle
+        return; // Oyunun başlamasını engelle
     }
+
+    // Rakip NFT'lerinden rastgele birini seç
+    const player2CharIndex = Math.floor(Math.random() * opponentNFTs.length);
+    player2CharacterData = opponentNFTs[player2CharIndex];
+    if (player2CharacterData.wallet) {
+        const fetchedOpponentName = await fetchUserNameByWallet(player2CharacterData.wallet);
+        if (fetchedOpponentName) {
+            player2Name = fetchedOpponentName;
+        }
+    }
+    
     player2 = new Player(player2Name, initialPlayerHp, 4, 'Rakip', true, player2CharacterData);
 
     currentPlayer = player1;
