@@ -102,6 +102,7 @@ let player1, player2, currentPlayer, gameActive = false,
     selectedPlayerNFT = null;
 let allFetchedNFTs = [];
 let opponentNFTs = [];
+let playerWalletAddress = null; // Cüzdan adresini postMessage ile alacağız
 
 // DOM elementleri
 const gameContainer = document.getElementById('game-container');
@@ -260,11 +261,6 @@ function maskWalletAddress(address, visibleChars = 4) {
     return `${address.substring(0, visibleChars)}...${address.substring(address.length - visibleChars)}`;
 }
 
-// URL'den cüzdan adresini al
-const urlParams = new URLSearchParams(window.location.search);
-const playerWalletAddress = urlParams.get('wallet'); // URL'den cüzdanı al
-console.log('URL Wallet Address:', playerWalletAddress); // Debug: URL'den alınan cüzdan adresini logla
-
 // Oyunun başlangıç durumuna getirilmesi
 async function initializeGame() {
     gameActive = false;
@@ -273,8 +269,14 @@ async function initializeGame() {
     currentBattleId = null;
     selectedPlayerNFT = null;
 
+    // Cüzdan adresi henüz alınmadıysa, bekle
+    if (!playerWalletAddress) {
+        displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
+        return;
+    }
+
     setTimeout(async () => {
-        // URL'den alınan cüzdan adresini göster
+        // Cüzdan adresini göster
         displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
 
         gameContainer.style.display = 'none';
@@ -282,7 +284,7 @@ async function initializeGame() {
         loadingNFTsMessage.style.display = 'block';
         characterGrid.innerHTML = '';
 
-        // URL'den alınan cüzdan adresiyle NFT'leri çek
+        // Cüzdan adresiyle NFT'leri çek
         allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri önce çek
 
         // Cüzdan adreslerini normalleştirerek filtrele
@@ -622,11 +624,19 @@ async function sendBattleResultToWebhook(winner, battleId) {
     }
 }
 
-// Olay dinleyicileri
-selectCharacterButton.addEventListener('click', startGameWithSelectedNFT);
-attackButton.addEventListener('click', handleAttack);
-buffButton.addEventListener('click', handleBuff);
-restartButton.addEventListener('click', initializeGame);
+// postMessage ile cüzdan adresini dinle
+window.addEventListener('message', async (event) => {
+    // Güvenlik: Mesajın beklenen kaynaktan geldiğini doğrulayın
+    // Webflow sitenizin domainini buraya ekleyin
+    if (event.origin !== 'https://cryptoyogi.webflow.io' && event.origin !== 'https://www.cryptoyogi.com') { // Webflow domaininizi buraya ekleyin
+        console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
+        return;
+    }
 
-// Oyunu başlat
-initializeGame();
+    if (event.data && event.data.type === 'walletAddress') {
+        playerWalletAddress = event.data.address;
+        console.log('postMessage ile alınan cüzdan adresi:', playerWalletAddress);
+        // Cüzdan adresi alındıktan sonra oyunu başlat
+        initializeGame();
+    }
+});
