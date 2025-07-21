@@ -300,13 +300,15 @@ async function initializeGame() {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
         }
 
-        startBattleButton.classList.add('hidden');
+        startBattleButton.classList.add('disabled');
+        selectCharacterButton.classList.add('disabled');
+        selectCharacterButton.disabled = true;
+        
+        // Diğer butonları başlangıçta gizle
         restartButton.classList.add('hidden');
         attackButton.classList.add('hidden');
         buffButton.classList.add('hidden');
-        disableActionButtons();
-        selectCharacterButton.classList.add('disabled');
-        selectCharacterButton.disabled = true;
+        disableActionButtons(); // Savaş başlamadan aksiyon butonlarını devre dışı bırak
     }, 500);
 }
 
@@ -328,18 +330,24 @@ function displayNFTsForSelection(nfts) {
 
 // NFT seçme fonksiyonu
 function selectNFT(nft, cardElement) {
+    console.log('NFT seçildi:', nft.name); // Debug: Hangi NFT seçildiğini logla
     const previouslySelected = document.querySelector('.character-selection-card.selected');
     if (previouslySelected) previouslySelected.classList.remove('selected');
     cardElement.classList.add('selected');
     selectedPlayerNFT = nft;
     selectCharacterButton.classList.remove('disabled');
     selectCharacterButton.disabled = false;
+    console.log('Seç karakter butonu etkinleştirildi. disabled:', selectCharacterButton.disabled); // Debug: Butonun etkinleştirildiğini logla
 }
 
 // Seçilen NFT ile oyunu başlatma
 async function startGameWithSelectedNFT() {
+    console.log('startGameWithSelectedNFT fonksiyonu çağrıldı.'); // Debug: Fonksiyonun çağrıldığını logla
+    console.log('selectedPlayerNFT değeri:', selectedPlayerNFT); // Debug: selectedPlayerNFT değerini logla
+
     if (!selectedPlayerNFT) {
         gameMessagesElement.textContent = "Lütfen bir karakter seçin!";
+        console.error("Hata: Karakter seçilmedi. Savaş başlatılamıyor."); // Debug: Hata mesajı
         return;
     }
 
@@ -601,8 +609,8 @@ async function sendBattleResultToWebhook(winner, battleId) {
         winner: winner
     };
 
-    console.log('Webhook Payload Object:', payload); // Payload nesnesini logla
-    console.log('Webhook Payload JSON:', JSON.stringify(payload)); // JSON stringini logla
+    console.log('Webhook Payload Object:', payload); // Debug: Payload nesnesini logla
+    console.log('Webhook Payload JSON:', JSON.stringify(payload)); // Debug: JSON stringini logla
 
     try {
         const response = await fetch(WEBHOOK_URL, {
@@ -628,7 +636,7 @@ async function sendBattleResultToWebhook(winner, battleId) {
 window.addEventListener('message', async (event) => {
     // Güvenlik: Mesajın beklenen kaynaktan geldiğini doğrulayın
     // Webflow sitenizin domainini buraya ekleyin
-    if (event.origin !== 'https://cryptoyogi.world' && event.origin !== 'https://www.cryptoyogi.world') { // Webflow domaininizi buraya ekleyin
+    if (event.origin !== 'https://cryptoyogi.webflow.io' && event.origin !== 'https://www.cryptoyogi.com') { // Webflow domaininizi buraya ekleyin
         console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
         return;
     }
