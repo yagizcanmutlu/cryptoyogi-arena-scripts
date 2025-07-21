@@ -664,3 +664,10 @@ window.addEventListener('message', async (event) => {
         initializeGame();
     }
 });
+
+// Oyun butonları için olay dinleyicileri
+// Bu dinleyiciler, iframe içindeki butonlara bağlanır
+selectCharacterButton.addEventListener('click', startGameWithSelectedNFT);
+attackButton.addEventListener('click', handleAttack);
+buffButton.addEventListener('click', handleBuff);
+restartButton.addEventListener('click', initializeGame);
