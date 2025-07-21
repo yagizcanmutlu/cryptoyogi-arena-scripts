@@ -598,6 +598,10 @@ async function sendBattleResultToWebhook(winner, battleId) {
         totalTurns: currentTurn,
         winner: winner
     };
+
+    console.log('Webhook Payload Object:', payload); // Payload nesnesini logla
+    console.log('Webhook Payload JSON:', JSON.stringify(payload)); // JSON stringini logla
+
     try {
         const response = await fetch(WEBHOOK_URL, {
             method: 'POST',
@@ -608,12 +612,13 @@ async function sendBattleResultToWebhook(winner, battleId) {
             body: JSON.stringify(payload)
         });
         if (!response.ok) {
-            /* const errorText = await response.text(); console.error('Webhook send failed:', response.status, errorText); */
+            const errorText = await response.text();
+            console.error('Webhook send failed:', response.status, errorText);
         } else {
-            /* console.log('Battle results sent to webhook successfully!'); */
+            console.log('Battle results sent to webhook successfully!');
         }
     } catch (error) {
-        /* console.error('Error sending battle results to webhook:', error); */
+        console.error('Error sending battle results to webhook:', error);
     }
 }
 
