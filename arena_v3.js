@@ -126,7 +126,7 @@ const player2HpText = document.getElementById('player2-hp');
 const player2CharacterCardVisualElement = document.getElementById('player2-character-card-visual');
 const player2CharacterNameElement = document.getElementById('player2-character-name');
 const player2CharacterStatsElement = document.getElementById('player2-character-stats');
-const player2NameDisplay = document.getElementById('player2-name-display'); // Düzeltildi
+const player2NameDisplay = document.getElementById('player2-name-display');
 
 const gameMessagesElement = document.getElementById('game-messages');
 const startBattleButton = document.getElementById('start-battle-button');
@@ -222,6 +222,7 @@ async function fetchNFTsFromAirtable(walletAddress = null) {
         });
     } catch (error) {
         gameMessagesElement.textContent = `NFT'ler yüklenirken bir sorun oluştu: ${error.message}. Lütfen konsolu kontrol edin ve Airtable ayarlarınızı doğrulayın.`;
+        console.error('fetchNFTsFromAirtable hatası:', error); // Hata detayını konsola yaz
         return [];
     }
 }
@@ -285,10 +286,12 @@ async function initializeGame() {
         displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
         loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
         loadingNFTsMessage.textContent = 'Cüzdan bilgisi bekleniyor...';
+        console.log('Cüzdan adresi henüz alınmadı, initializeGame bekleniyor.'); // Debug log
         return; // postMessage dinleyicisi tarafından tekrar çağrılacak
     }
 
     // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
+    console.log('Cüzdan adresi alındı:', playerWalletAddress, 'NFT\'ler yükleniyor...'); // Debug log
     setTimeout(async () => {
         displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
         loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // NFT yükleme mesajını güncelle
@@ -304,8 +307,10 @@ async function initializeGame() {
 
         if (playerNFTs.length > 0) {
             displayNFTsForSelection(playerNFTs);
+            console.log('Oyuncu NFTleri yüklendi:', playerNFTs.length); // Debug log
         } else {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
+            console.warn('Oyuncu NFTleri bulunamadı veya yüklendiğinde boş geldi.'); // Debug log
         }
     }, 500);
 }
@@ -632,9 +637,18 @@ async function sendBattleResultToWebhook(winner, battleId) {
 
 // postMessage ile cüzdan adresini dinle
 window.addEventListener('message', async (event) => {
+    console.log('iframe içinde mesaj alındı. Origin:', event.origin, 'Data:', event.data); // Yeni debug logu
+
     // Güvenlik: Mesajın beklenen kaynaktan geldiğini doğrulayın
     // Webflow sitenizin domainini buraya ekleyin
-    if (event.origin !== 'https://cryptoyogi.webflow.io' && event.origin !== 'https://www.cryptoyogi.com') { // Webflow domaininizi buraya ekleyin
+    // Şimdilik hata ayıklama için daha esnek bir kontrol yapalım
+    const allowedOrigins = [
+        'https://cryptoyogi.webflow.io',
+        'https://www.cryptoyogi.com',
+        'https://yagizcanmutlu.github.io' // Kendi GitHub Pages domaininizi de ekledik
+    ];
+
+    if (!allowedOrigins.includes(event.origin)) {
         console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
         return;
     }
