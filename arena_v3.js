@@ -628,7 +628,7 @@ async function sendBattleResultToWebhook(winner, battleId) {
 window.addEventListener('message', async (event) => {
     // Güvenlik: Mesajın beklenen kaynaktan geldiğini doğrulayın
     // Webflow sitenizin domainini buraya ekleyin
-    if (event.origin !== 'https://cryptoyogi.webflow.io' && event.origin !== 'https://www.cryptoyogi.com') { // Webflow domaininizi buraya ekleyin
+    if (event.origin !== 'https://cryptoyogi.world' && event.origin !== 'https://www.cryptoyogi.world') { // Webflow domaininizi buraya ekleyin
         console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
         return;
     }
