@@ -360,7 +360,7 @@ async function startGameWithSelectedNFT() {
         }
     }
     player1 = new Player(player1Name, initialPlayerHp, 5, 'Siz', false, selectedPlayerNFT);
-    currentBattleId = selectedPlayerNFT.id;
+    currentBattleId = player1.character.id; // Battle ID'nin player1'in karakter ID'si olduğundan emin olalım
 
     let player2Name = "RAKİP";
     let player2CharacterData;
