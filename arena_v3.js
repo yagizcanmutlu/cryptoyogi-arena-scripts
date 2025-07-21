@@ -126,7 +126,7 @@ const player2HpText = document.getElementById('player2-hp');
 const player2CharacterCardVisualElement = document.getElementById('player2-character-card-visual');
 const player2CharacterNameElement = document.getElementById('player2-character-name');
 const player2CharacterStatsElement = document.getElementById('player2-character-stats');
-const player2NameDisplay = document('player2-name-display');
+const player2NameDisplay = document.getElementById('player2-name-display'); // Düzeltildi
 
 const gameMessagesElement = document.getElementById('game-messages');
 const startBattleButton = document.getElementById('start-battle-button');
@@ -269,46 +269,44 @@ async function initializeGame() {
     currentBattleId = null;
     selectedPlayerNFT = null;
 
-    // Cüzdan adresi henüz alınmadıysa, bekle
+    // Her zaman karakter seçim ekranını göster
+    gameContainer.style.display = 'none'; // Oyun konteynerinin gizli olduğundan emin ol
+    characterSelectionScreen.style.display = 'flex'; // Karakter seçim ekranını görünür yap
+    characterGrid.innerHTML = ''; // Önceki kartları temizle
+    selectCharacterButton.classList.add('disabled');
+    selectCharacterButton.disabled = true;
+    restartButton.classList.add('hidden');
+    attackButton.classList.add('hidden');
+    buffButton.classList.add('hidden');
+    disableActionButtons();
+
+    // Cüzdan adresi henüz alınmadıysa, bekleme mesajını göster ve geri dön
     if (!playerWalletAddress) {
         displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
-        return;
+        loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
+        loadingNFTsMessage.textContent = 'Cüzdan bilgisi bekleniyor...';
+        return; // postMessage dinleyicisi tarafından tekrar çağrılacak
     }
 
+    // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
     setTimeout(async () => {
-        // Cüzdan adresini göster
         displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
+        loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // NFT yükleme mesajını güncelle
 
-        gameContainer.style.display = 'none';
-        characterSelectionScreen.style.display = 'flex';
-        loadingNFTsMessage.style.display = 'block';
-        characterGrid.innerHTML = '';
-
-        // Cüzdan adresiyle NFT'leri çek
-        allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri önce çek
+        allFetchedNFTs = await fetchNFTsFromAirtable(playerWalletAddress); // Cüzdan adresine göre filtrele
 
         // Cüzdan adreslerini normalleştirerek filtrele
         const cleanedPlayerWalletAddress = playerWalletAddress ? playerWalletAddress.toLowerCase().trim() : null;
         const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress);
         opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() !== cleanedPlayerWalletAddress);
 
-        loadingNFTsMessage.style.display = 'none';
+        loadingNFTsMessage.style.display = 'none'; // Yükleme mesajını gizle
 
         if (playerNFTs.length > 0) {
             displayNFTsForSelection(playerNFTs);
         } else {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
         }
-
-        startBattleButton.classList.add('disabled');
-        selectCharacterButton.classList.add('disabled');
-        selectCharacterButton.disabled = true;
-        
-        // Diğer butonları başlangıçta gizle
-        restartButton.classList.add('hidden');
-        attackButton.classList.add('hidden');
-        buffButton.classList.add('hidden');
-        disableActionButtons(); // Savaş başlamadan aksiyon butonlarını devre dışı bırak
     }, 500);
 }
 
