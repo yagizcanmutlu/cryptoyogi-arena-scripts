@@ -146,14 +146,10 @@ const AIRTABLE_NFT_TABLE_NAME = 'nft_list';
 const AIRTABLE_USER_TABLE_NAME = 'user_list';
 
 // Airtable'dan NFT'leri çeken fonksiyon
-async function fetchNFTsFromAirtable(walletAddress = null) {
+// Bu fonksiyon artık tüm NFT'leri çeker, cüzdan filtresi burada uygulanmaz
+async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıldı
     let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_NFT_TABLE_NAME}`;
-    if (walletAddress) {
-        // Cüzdan adresini normalleştir
-        const cleanWalletAddress = walletAddress.toLowerCase().trim();
-        url += `?filterByFormula={wallet}='${cleanWalletAddress}'`;
-    }
-    console.log('Airtable API URL (constructed):', url); // Debug: Oluşturulan Airtable URL'ini logla
+    console.log('Airtable API URL (constructed - tüm NFTler için):', url); // Debug: Oluşturulan Airtable URL'ini logla
     try {
         const response = await fetch(url, {
             headers: {
@@ -166,7 +162,7 @@ async function fetchNFTsFromAirtable(walletAddress = null) {
             throw new Error(`Airtable API hatası: Sunucudan yanıt alınamadı veya yetkilendirme sorunu (HTTP ${response.status}). Lütfen API anahtarınızın, Base ID'nizin ve tablo adınızın doğru olduğundan, ayrıca API anahtarınızın gerekli izinlere (read) sahip olduğundan ve Airtable'daki 'wallet' sütun adının doğru olduğundan emin olun.`);
         }
         const data = await response.json();
-        console.log('Airtable API Raw Response:', data); // Debug: Airtable'dan gelen ham yanıtı logla
+        console.log('Airtable API Raw Response (tüm NFTler):', data); // Debug: Airtable'dan gelen ham yanıtı logla
         if (!data.records || data.records.length === 0) {
             return [];
         }
@@ -254,16 +250,14 @@ async function initializeGame() {
     // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
     console.log('Cüzdan adresi alındı:', playerWalletAddress, 'NFT\'ler yükleniyor...'); // Debug log
     setTimeout(async () => {
-        displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
-        loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // NFT yükleme mesajını güncelle
-
-        allFetchedNFTs = await fetchNFTsFromAirtable(playerWalletAddress); // Cüzdan adresine göre filtrele
+        allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri cüzdan filtresi olmadan çek
 
         // Cüzdan adreslerini normalleştirerek filtrele
         const cleanedPlayerWalletAddress = playerWalletAddress ? playerWalletAddress.toLowerCase().trim() : null;
         const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress);
         opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() !== cleanedPlayerWalletAddress);
 
+        displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
         loadingNFTsMessage.style.display = 'none'; // Yükleme mesajını gizle
 
         if (playerNFTs.length > 0) {
