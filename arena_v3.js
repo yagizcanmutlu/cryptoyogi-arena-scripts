@@ -130,7 +130,7 @@ const player2NameDisplay = document.getElementById('player2-name-display');
 
 const gameMessagesElement = document.getElementById('game-messages');
 const startBattleButton = document.getElementById('start-battle-button');
-const restartButton = document.getElementById('restart-button');
+const restartButton = document = document.getElementById('restart-button');
 const attackButton = document.getElementById('attack-button');
 const buffButton = document.getElementById('buff-button');
 
@@ -243,12 +243,10 @@ async function initializeGame() {
         displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
         loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
         loadingNFTsMessage.textContent = 'Cüzdan bilgisi bekleniyor...';
-        // console.log('Cüzdan adresi henüz alınmadı, initializeGame bekleniyor.'); // Debug log
         return; // postMessage dinleyicisi tarafından tekrar çağrılacak
     }
 
     // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
-    // console.log('Cüzdan adresi alındı:', playerWalletAddress, 'NFT\'ler yükleniyor...'); // Debug log
     setTimeout(async () => {
         allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri cüzdan filtresi olmadan çek
 
@@ -262,7 +260,7 @@ async function initializeGame() {
 
         if (playerNFTs.length > 0) {
             displayNFTsForSelection(playerNFTs);
-            // console.log('Oyuncu NFTleri yüklendi:', playerNFTs.length); // Debug log
+            console.log('Oyun başarıyla başlatıldı ve NFT\'ler yüklendi.'); // Başarılı durum logu
         } else {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
             console.warn('Oyuncu NFTleri bulunamadı veya yüklendiğinde boş geldi.'); // Debug log
@@ -288,21 +286,16 @@ function displayNFTsForSelection(nfts) {
 
 // NFT seçme fonksiyonu
 function selectNFT(nft, cardElement) {
-    // console.log('NFT seçildi:', nft.name); // Debug: Hangi NFT seçildiğini logla
     const previouslySelected = document.querySelector('.character-selection-card.selected');
     if (previouslySelected) previouslySelected.classList.remove('selected');
     cardElement.classList.add('selected');
     selectedPlayerNFT = nft;
     selectCharacterButton.classList.remove('disabled');
     selectCharacterButton.disabled = false;
-    // console.log('Seç karakter butonu etkinleştirildi. disabled:', selectCharacterButton.disabled); // Debug: Butonun etkinleştirildiğini logla
 }
 
 // Seçilen NFT ile oyunu başlatma
 async function startGameWithSelectedNFT() {
-    // console.log('startGameWithSelectedNFT fonksiyonu çağrıldı.'); // Debug: Fonksiyonun çağrıldığını logla
-    // console.log('selectedPlayerNFT değeri:', selectedPlayerNFT); // Debug: selectedPlayerNFT değerini logla
-
     if (!selectedPlayerNFT) {
         gameMessagesElement.textContent = "Lütfen bir karakter seçin!";
         console.error("Hata: Karakter seçilmedi. Savaş başlatılamıyor."); // Debug: Hata mesajı
@@ -569,9 +562,6 @@ async function sendBattleResultToWebhook(winner, battleId) {
         totalTurns: currentTurn,
         winner: winner
     };
-
-    // console.log('Webhook Payload Object:', payload); // Debug: Payload nesnesini logla
-    // console.log('Webhook Payload JSON:', JSON.stringify(payload)); // Debug: JSON stringini logla
 
     try {
         const response = await fetch(WEBHOOK_URL, {
