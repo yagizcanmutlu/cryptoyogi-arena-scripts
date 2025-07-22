@@ -149,7 +149,7 @@ const AIRTABLE_USER_TABLE_NAME = 'user_list';
 // Bu fonksiyon artık tüm NFT'leri çeker, cüzdan filtresi burada uygulanmaz
 async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıldı
     let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_NFT_TABLE_NAME}`;
-    console.log('Airtable API URL (constructed - tüm NFTler için):', url); // Debug: Oluşturulan Airtable URL'ini logla
+    // console.log('Airtable API URL (constructed - tüm NFTler için):', url); // Debug: Oluşturulan Airtable URL'ini logla
     try {
         const response = await fetch(url, {
             headers: {
@@ -162,7 +162,7 @@ async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıl
             throw new Error(`Airtable API hatası: Sunucudan yanıt alınamadı veya yetkilendirme sorunu (HTTP ${response.status}). Lütfen API anahtarınızın, Base ID'nizin ve tablo adınızın doğru olduğundan, ayrıca API anahtarınızın gerekli izinlere (read) sahip olduğundan ve Airtable'daki 'wallet' sütun adının doğru olduğundan emin olun.`);
         }
         const data = await response.json();
-        console.log('Airtable API Raw Response (tüm NFTler):', data); // Debug: Airtable'dan gelen ham yanıtı logla
+        // console.log('Airtable API Raw Response (tüm NFTler):', data); // Debug: Airtable'dan gelen ham yanıtı logla
         if (!data.records || data.records.length === 0) {
             return [];
         }
@@ -243,12 +243,12 @@ async function initializeGame() {
         displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
         loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
         loadingNFTsMessage.textContent = 'Cüzdan bilgisi bekleniyor...';
-        console.log('Cüzdan adresi henüz alınmadı, initializeGame bekleniyor.'); // Debug log
+        // console.log('Cüzdan adresi henüz alınmadı, initializeGame bekleniyor.'); // Debug log
         return; // postMessage dinleyicisi tarafından tekrar çağrılacak
     }
 
     // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
-    console.log('Cüzdan adresi alındı:', playerWalletAddress, 'NFT\'ler yükleniyor...'); // Debug log
+    // console.log('Cüzdan adresi alındı:', playerWalletAddress, 'NFT\'ler yükleniyor...'); // Debug log
     setTimeout(async () => {
         allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri cüzdan filtresi olmadan çek
 
@@ -258,11 +258,11 @@ async function initializeGame() {
         opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() !== cleanedPlayerWalletAddress);
 
         displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
-        loadingNFTsMessage.style.display = 'none'; // Yükleme mesajını gizle
+        loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // NFT yükleme mesajını güncelle
 
         if (playerNFTs.length > 0) {
             displayNFTsForSelection(playerNFTs);
-            console.log('Oyuncu NFTleri yüklendi:', playerNFTs.length); // Debug log
+            // console.log('Oyuncu NFTleri yüklendi:', playerNFTs.length); // Debug log
         } else {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
             console.warn('Oyuncu NFTleri bulunamadı veya yüklendiğinde boş geldi.'); // Debug log
@@ -288,20 +288,20 @@ function displayNFTsForSelection(nfts) {
 
 // NFT seçme fonksiyonu
 function selectNFT(nft, cardElement) {
-    console.log('NFT seçildi:', nft.name); // Debug: Hangi NFT seçildiğini logla
+    // console.log('NFT seçildi:', nft.name); // Debug: Hangi NFT seçildiğini logla
     const previouslySelected = document.querySelector('.character-selection-card.selected');
     if (previouslySelected) previouslySelected.classList.remove('selected');
     cardElement.classList.add('selected');
     selectedPlayerNFT = nft;
     selectCharacterButton.classList.remove('disabled');
     selectCharacterButton.disabled = false;
-    console.log('Seç karakter butonu etkinleştirildi. disabled:', selectCharacterButton.disabled); // Debug: Butonun etkinleştirildiğini logla
+    // console.log('Seç karakter butonu etkinleştirildi. disabled:', selectCharacterButton.disabled); // Debug: Butonun etkinleştirildiğini logla
 }
 
 // Seçilen NFT ile oyunu başlatma
 async function startGameWithSelectedNFT() {
-    console.log('startGameWithSelectedNFT fonksiyonu çağrıldı.'); // Debug: Fonksiyonun çağrıldığını logla
-    console.log('selectedPlayerNFT değeri:', selectedPlayerNFT); // Debug: selectedPlayerNFT değerini logla
+    // console.log('startGameWithSelectedNFT fonksiyonu çağrıldı.'); // Debug: Fonksiyonun çağrıldığını logla
+    // console.log('selectedPlayerNFT değeri:', selectedPlayerNFT); // Debug: selectedPlayerNFT değerini logla
 
     if (!selectedPlayerNFT) {
         gameMessagesElement.textContent = "Lütfen bir karakter seçin!";
@@ -570,8 +570,8 @@ async function sendBattleResultToWebhook(winner, battleId) {
         winner: winner
     };
 
-    console.log('Webhook Payload Object:', payload); // Debug: Payload nesnesini logla
-    console.log('Webhook Payload JSON:', JSON.stringify(payload)); // Debug: JSON stringini logla
+    // console.log('Webhook Payload Object:', payload); // Debug: Payload nesnesini logla
+    // console.log('Webhook Payload JSON:', JSON.stringify(payload)); // Debug: JSON stringini logla
 
     try {
         const response = await fetch(WEBHOOK_URL, {
@@ -586,7 +586,7 @@ async function sendBattleResultToWebhook(winner, battleId) {
             const errorText = await response.text();
             console.error('Webhook send failed:', response.status, errorText);
         } else {
-            console.log('Battle results sent to webhook successfully!');
+            console.log('Battle results sent to webhook successfully!'); // Bu logu bırakıyoruz, başarılı gönderimi gösteriyor
         }
     } catch (error) {
         console.error('Error sending battle results to webhook:', error);
@@ -595,20 +595,18 @@ async function sendBattleResultToWebhook(winner, battleId) {
 
 // postMessage ile cüzdan adresini dinle
 window.addEventListener('message', async (event) => {
-    console.log('iframe içinde mesaj alındı. Origin:', event.origin, 'Data:', event.data); // Yeni debug logu
+    // console.log('iframe içinde mesaj alındı. Origin:', event.origin, 'Data:', event.data); // Debug logu kaldırıldı
 
     // Güvenlik: Mesajın beklenen kaynaktan geldiğini doğrulayın
-    // Webflow sitenizin domainini buraya ekleyin
-    // Şimdilik hata ayıklama için daha esnek bir kontrol yapalım
     const allowedOrigins = [
         'https://cryptoyogi.webflow.io',
         'https://www.cryptoyogi.com',
-        'https://yagizcanmutlu.github.io', // Kendi GitHub Pages domaininizi de ekledik
-        'https://www.cryptoyogi.world' // Yeni eklenen domain
+        'https://yagizcanmutlu.github.io',
+        'https://www.cryptoyogi.world'
     ];
 
-    console.log('Kontrol edilen Origin:', event.origin); // Yeni log
-    console.log('İzin verilen Origins:', allowedOrigins); // Yeni log
+    // console.log('Kontrol edilen Origin:', event.origin); // Debug logu kaldırıldı
+    // console.log('İzin verilen Origins:', allowedOrigins); // Debug logu kaldırıldı
 
     if (!allowedOrigins.includes(event.origin)) {
         console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
@@ -617,7 +615,7 @@ window.addEventListener('message', async (event) => {
 
     if (event.data && event.data.type === 'walletAddress') {
         playerWalletAddress = event.data.address;
-        console.log('postMessage ile alınan cüzdan adresi:', playerWalletAddress);
+        // console.log('postMessage ile alınan cüzdan adresi:', playerWalletAddress); // Cüzdan adresi logu kaldırıldı
         // Cüzdan adresi alındıktan sonra oyunu başlat
         initializeGame();
     }
