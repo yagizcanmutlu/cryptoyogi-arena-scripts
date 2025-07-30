@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Değişkenleri */
+        /* CSS Variables */
         :root {
             --neon-pink: #ff0080;
             --neon-cyan: #00ffff;
@@ -20,7 +20,7 @@
             --cyber-grid: #333333;
         }
 
-        /* Temel Sıfırlamalar ve Genel Stiller */
+        /* Basic Resets and General Styles */
         * {
             box-sizing: border-box;
         }
@@ -39,7 +39,7 @@
             align-items: center;
         }
 
-        /* Siber Arka Plan Efekti */
+        /* Cyber Background Effect */
         .cyber-background {
             position: fixed;
             top: 0;
@@ -63,7 +63,7 @@
             }
         }
 
-        /* Parçacık Efekti */
+        /* Particle Effect */
         .particles {
             position: fixed;
             top: 0;
@@ -106,7 +106,7 @@
             }
         }
 
-        /* Oyun Konteyneri */
+        /* Game Container */
         .game-container {
             background: linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(10, 10, 10, 0.6) 100%);
             border-radius: 20px;
@@ -116,16 +116,16 @@
             max-width: 1200px;
             position: relative;
             backdrop-filter: blur(10px);
-            display: none; /* Başlangıçta gizli */
+            display: none; /* Hidden initially */
             flex-direction: column;
             align-items: center;
         }
 
         .game-container::before {
-            content: none; /* Bu pseudo-element'i kaldırıyoruz */
+            content: none; /* Remove this pseudo-element */
         }
 
-        /* Oyun Başlığı */
+        /* Game Title */
         .game-title {
             font-family: 'Orbitron', monospace;
             font-size: 2.5rem;
@@ -148,28 +148,28 @@
             }
         }
 
-        /* Ana Oyun İçeriği Düzeni */
+        /* Main Game Content Layout */
         .main-game-content {
             display: flex;
-            flex-direction: column; /* Dikey düzen */
+            flex-direction: column; /* Vertical layout */
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Boşluk azaltıldı */
+            gap: 20px; /* Reduced gap */
             width: 100%;
             margin-bottom: 30px;
         }
 
         .player-areas-wrapper {
             display: flex;
-            justify-content: center; /* Ortalandı */
+            justify-content: center; /* Centered */
             align-items: flex-start;
             gap: 30px;
             flex-grow: 1;
-            width: 100%; /* Tam genişlik */
-            max-width: 800px; /* Maksimum genişlik korundu */
+            width: 100%; /* Full width */
+            max-width: 800px; /* Max width maintained */
         }
 
-        /* Oyuncu Alanları */
+        /* Player Areas */
         .player-area {
             background: linear-gradient(135deg, rgba(26, 26, 26, 0.4) 0%, rgba(10, 10, 10, 0.5) 100%);
             border-radius: 15px;
@@ -188,12 +188,15 @@
         }
 
         #player1-area {
-            display: none; /* Oyuncu 1 alanı gizlendi, yerine player-bar kullanılacak */
+            display: none; /* Player 1 area hidden, player-bar will be used instead */
         }
 
         #player2-area {
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            border: none; /* Removed border */
+            box-shadow: none; /* Removed box shadow */
+            background: none; /* Removed background */
+            padding: 0; /* Removed padding */
+            max-width: 400px; /* Adjusted max-width for opponent card */
         }
 
         .player-area::before {
@@ -228,10 +231,11 @@
             }
         }
 
-        /* Oyuncu Bilgisi (Üst Kısım) */
+        /* Player Info (Top Section) */
         .player-info-top {
             width: 100%;
             text-align: center;
+            margin-bottom: 10px; /* Added margin-bottom */
         }
 
         .player-info-top h2 {
@@ -245,7 +249,7 @@
             margin-bottom: 10px;
         }
 
-        /* Can Barı */
+        /* HP Bar */
         .hp-bar-container {
             width: 80%;
             height: 20px;
@@ -289,7 +293,7 @@
             }
         }
 
-        /* Karakter Kartı Görseli */
+        /* Character Card Visual */
         .character-card-visual {
             width: 280px;
             height: 380px;
@@ -341,7 +345,7 @@
             filter: brightness(1.1) contrast(1.2);
         }
 
-        /* Karakter Bilgisi (Alt Kısım) */
+        /* Character Info (Bottom Section) */
         .character-info-bottom {
             width: 100%;
             text-align: center;
@@ -349,6 +353,7 @@
             border-radius: 10px;
             padding: 15px;
             border: 1px solid var(--neon-cyan);
+            margin-top: 10px; /* Added margin-top */
         }
 
         .character-name {
@@ -401,7 +406,7 @@
             text-shadow: 0 0 5px rgba(0, 255, 65, 0.8);
         }
 
-        /* Oyun Mesajları */
+        /* Game Messages */
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
@@ -443,7 +448,7 @@
             }
         }
 
-        /* Oyun Butonları Yan Çubuk */
+        /* Game Buttons Sidebar */
         .game-buttons-sidebar {
             display: flex;
             flex-direction: column;
@@ -453,7 +458,7 @@
             align-items: center;
         }
 
-        /* Genel Oyun Buton Stili */
+        /* General Game Button Style */
         .game-button {
             font-family: 'Orbitron', monospace;
             color: white;
@@ -501,7 +506,7 @@
             transform: none !important;
         }
 
-        /* Saldırı Butonu */
+        /* Attack Button */
         #attack-button {
             background: linear-gradient(45deg, rgba(255, 0, 128, 0.3), rgba(204, 0, 102, 0.3));
             border: 2px solid rgba(255, 0, 128, 0.6);
@@ -514,7 +519,7 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* Güçlen Butonu */
+        /* Buff Button */
         #buff-button {
             background: linear-gradient(45deg, rgba(0, 255, 255, 0.3), rgba(0, 204, 204, 0.3));
             border: 2px solid rgba(0, 255, 255, 0.6);
@@ -527,7 +532,7 @@
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* Animasyonlar */
+        /* Animations */
         @keyframes target-shake {
             0%, 100% {
                 transform: translateX(0);
@@ -600,9 +605,9 @@
             animation: winning-card-animation 2s ease-in-out forwards;
         }
 
-        /* Karakter Seçim Ekranı */
+        /* Character Selection Screen */
         .character-selection-screen {
-            /* Arka plan görseli eklendi ve opaklık ayarlandı */
+            /* Background image added and opacity adjusted */
             background: linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(10, 10, 10, 0.6) 100%), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a35914866d06a9c46dbc1_arena_bg.png');
             background-size: cover;
             background-position: center;
@@ -624,7 +629,7 @@
         }
 
         .character-selection-screen h1 {
-            font-family: 'Rajdhani', sans-serif; /* Font güncellendi */
+            font-family: 'Rajdhani', sans-serif; /* Font updated */
             font-size: 2.2rem;
             font-weight: 900;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
@@ -645,7 +650,7 @@
         }
 
         .character-selection-card {
-            /* Arka plan şeffaflığı artırıldı ve yeni GIF eklendi */
+            /* Background transparency increased and new GIF added */
             background: linear-gradient(135deg, rgba(42, 42, 42, 0.5), rgba(26, 26, 26, 0.6)), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a617948ab6ad14813d2e4_arena_bgb.png');
             background-size: cover;
             background-position: center;
@@ -699,14 +704,14 @@
         }
 
         .character-selection-card h3 {
-            font-family: 'Rajdhani', sans-serif; /* Font güncellendi */
+            font-family: 'Rajdhani', sans-serif; /* Font updated */
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--neon-cyan);
         }
 
         .character-selection-card p {
-            font-family: 'Rajdhani', sans-serif; /* Font güncellendi */
+            font-family: 'Rajdhani', sans-serif; /* Font updated */
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--neon-green);
@@ -742,7 +747,7 @@
             transform: none !important;
         }
 
-        /* Savaş Giriş Ekranı */
+        /* Battle Intro Screen */
         #battle-intro-screen {
             position: absolute;
             top: 0;
@@ -784,11 +789,11 @@
             margin-top: 20px;
             opacity: 0;
             transition: opacity 0.8s ease-out 0.5s;
-            /* Yeni eklenen stil */
+            /* New style added */
             text-align: center;
         }
 
-        /* Yeni Eklenen Oyuncu Barı Stilleri */
+        /* Newly Added Player Bar Styles */
         .player-bar {
             display: flex;
             align-items: center;
@@ -796,8 +801,8 @@
             border-radius: 15px;
             padding: 10px 20px;
             margin-bottom: 20px;
-            width: 90%; /* Genişlik ayarlandı */
-            max-width: 600px; /* Maksimum genişlik */
+            width: 90%; /* Width adjusted */
+            max-width: 600px; /* Max width */
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 15px rgba(128, 0, 255, 0.3), inset 0 0 10px rgba(128, 0, 255, 0.1);
         }
@@ -850,6 +855,10 @@
             transition: width 0.8s ease-out;
         }
 
+        .player-bar-hp.low-hp { /* Added low-hp class for player-bar-hp */
+            background: linear-gradient(45deg, var(--neon-pink), #ff4080);
+        }
+
         .player-bar-hp-text {
             font-size: 0.9rem;
             font-weight: 700;
@@ -886,7 +895,7 @@
         }
 
 
-        /* Duyarlı Tasarım (Mobil Uyumlu) */
+        /* Responsive Design (Mobile Friendly) */
         @media (max-width: 768px) {
             .game-container, .character-selection-screen {
                 margin: 10px auto;
@@ -980,14 +989,14 @@
                 font-size: 1.8rem;
             }
 
-            /* Mobil dikeyde üst boşluk ayarı */
+            /* Mobile vertical top spacing adjustment */
             .character-selection-screen {
-                margin-top: 50px; /* Üstten boşluk eklendi */
+                margin-top: 50px; /* Top spacing added */
             }
 
-            /* Oyuncu barı mobil uyumluluğu */
+            /* Player bar mobile compatibility */
             .player-bar {
-                flex-direction: row; /* Yatay kalacak */
+                flex-direction: row; /* Remain horizontal */
                 width: 98%;
                 padding: 8px 15px;
                 margin-bottom: 15px;
@@ -1017,6 +1026,44 @@
                 padding: 1px 3px;
                 font-size: 0.7rem;
             }
+
+            /* Opponent area adjustments for mobile */
+            #player2-area {
+                padding: 10px; /* Reduced padding */
+                gap: 10px; /* Reduced gap */
+            }
+
+            .player-info-top h2 {
+                font-size: 1.2rem; /* Smaller font size */
+            }
+
+            .player-info-top p {
+                font-size: 0.8rem; /* Smaller font size */
+            }
+
+            .hp-bar-container {
+                height: 15px; /* Smaller height */
+            }
+
+            .character-card-visual {
+                width: 200px; /* Adjusted width */
+                height: 280px; /* Adjusted height */
+                margin-bottom: 10px; /* Reduced margin */
+            }
+
+            .character-info-bottom {
+                padding: 10px; /* Reduced padding */
+                margin-top: 5px; /* Reduced margin */
+            }
+
+            .character-name {
+                font-size: 1rem; /* Smaller font size */
+            }
+
+            .character-stats {
+                font-size: 0.7rem; /* Smaller font size */
+                gap: 5px;
+            }
         }
     </style>
 </head>
@@ -1024,7 +1071,7 @@
     <div class="cyber-background"></div>
     <div class="particles"></div>
 
-    <!-- Karakter Seçim Ekranı -->
+    <!-- Character Selection Screen -->
     <div class="character-selection-screen" id="character-selection-screen">
         <h1>NFT KARAKTERİNİ SEÇ</h1>
         <p class="text-gray-400 text-sm mb-4">Cüzdan Adresiniz: <span id="displayWalletAddress" class="text-neon-cyan font-bold">Yükleniyor...</span></p>
@@ -1034,31 +1081,31 @@
         <button id="select-character-button" class="start-game-button-selection disabled" disabled>SAVAŞA BAŞLA</button>
     </div>
 
-    <!-- Oyun Konteyneri -->
+    <!-- Game Container -->
     <div class="game-container" id="game-container">
         <h1 class="game-title">NFT BATTLE ARENA</h1>
 
-        <!-- Savaş Giriş Ekranı -->
+        <!-- Battle Intro Screen -->
         <div id="battle-intro-screen">
             <h2 class="text-3xl font-orbitron text-neon-cyan mb-8">Savaş Başlıyor!</h2>
             <div id="intro-player-card" class="character-card-visual"></div>
             <p id="intro-player-name" class="text-center"></p>
         </div>
 
-        <!-- Ana Oyun İçeriği -->
+        <!-- Main Game Content -->
         <div class="main-game-content">
-            <!-- Oyuncu 1 (Sen) Barı -->
+            <!-- Player 1 (You) Bar -->
             <div class="player-bar" id="player1-bar">
                 <div class="player-bar-avatar">
-                    <!-- NFT görseli buraya gelecek. JavaScript'ten güncellenmeli. -->
-                    <img id="player1-avatar" src="https://placehold.co/60x60/8000ff/ffffff?text=P1" alt="Oyuncu 1 Avatarı">
+                    <!-- NFT image will go here. Should be updated from JavaScript. -->
+                    <img id="player1-avatar" src="https://placehold.co/60x60/8000ff/ffffff?text=P1" alt="Player 1 Avatar">
                 </div>
                 <div class="player-bar-info">
                     <div class="player-bar-name" id="player1-name-bar">SEN</div>
                     <div class="player-bar-hp-container">
                         <div id="player1-hp-bar-small" class="player-bar-hp" style="width: 100%;"></div>
                     </div>
-                    <!-- Oyuncu istatistikleri buraya eklendi -->
+                    <!-- Player stats added here -->
                     <div class="player-bar-stats">
                         <div class="player-bar-stat-item">LVL: <span id="player1-level-bar" class="player-bar-stat-value">?</span></div>
                         <div class="player-bar-stat-item">ATK: <span id="player1-atk-bar" class="player-bar-stat-value">?</span></div>
@@ -1070,7 +1117,7 @@
             </div>
 
             <div class="player-areas-wrapper">
-                <!-- Oyuncu 2 (Rakip) Alanı -->
+                <!-- Player 2 (Opponent) Area -->
                 <div class="player-area" id="player2-area">
                     <div class="player-info-top">
                         <h2 id="player2-name-display">RAKİP</h2>
@@ -1085,7 +1132,7 @@
                         <div class="character-stats" id="player2-character-stats"></div>
                     </div>
                 </div>
-                <!-- Oyuncu 1 (Sen) Alanı - Bu kısım gizlendi -->
+                <!-- Player 1 (You) Area - This section is hidden -->
                 <div class="player-area hidden" id="player1-area">
                     <div class="player-info-top">
                         <h2 id="player1-name-display">SEN</h2>
@@ -1101,7 +1148,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Oyun Butonları -->
+            <!-- Game Buttons -->
             <div class="game-buttons-sidebar">
                 <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLAT</button>
                 <button id="attack-button" class="game-button hidden">SALDIRI</button>
@@ -1109,35 +1156,35 @@
                 <button id="restart-button" class="game-button hidden">YENİDEN</button>
             </div>
         </div>
-        <!-- Oyun Mesajları Alanı -->
+        <!-- Game Messages Area -->
         <div class="game-messages" id="game-messages">SAVAŞ BAŞLADI! SIRA SENDE.</div>
     </div>
-    <!-- JavaScript dosyanızı buraya bağlayın -->
+    <!-- Link your JavaScript file here -->
     <script src="arena_v3.js"></script>
     <!--
-        ÖNEMLİ NOT:
-        Yukarıdaki HTML değişiklikleri, oyuncu 1'in (sizin) bilgilerini üstteki bara taşımıştır.
-        Bu bilgilerin doğru şekilde görünmesi ve güncellenmesi için "arena_v3.js" dosyanızda aşağıdaki değişiklikleri yapmanız gerekmektedir:
+        IMPORTANT NOTE:
+        The HTML changes above have moved Player 1's (your) information to the top bar.
+        For this information to be displayed and updated correctly, you need to make the following changes in your "arena_v3.js" file:
 
-        1.  **NFT Görseli:** Oyuncu 1'in NFT görselini yüklediğinizde, bu görseli `player1-avatar` elementinin `src` özelliğine atayın.
-            Örnek: `document.getElementById('player1-avatar').src = karakterinNFTGorseliURL;`
+        1.  **NFT Image:** When you load Player 1's NFT image, assign this image to the `src` attribute of the `player1-avatar` element.
+            Example: `document.getElementById('player1-avatar').src = characterNFTImageURL;`
 
-        2.  **Can (HP) Güncellemesi:** Oyuncu 1'in canı değiştiğinde, hem `player1-hp-bar-small` elementinin `width` stilini, hem de `player1-hp-bar-text` elementinin metin içeriğini güncelleyin.
-            Örnek:
-            `document.getElementById('player1-hp-bar-small').style.width = yeniHP + '%';`
-            `document.getElementById('player1-hp-bar-text').textContent = yeniHP + ' HP';`
+        2.  **HP Update:** When Player 1's HP changes, update both the `width` style of the `player1-hp-bar-small` element and the text content of the `player1-hp-bar-text` element.
+            Example:
+            `document.getElementById('player1-hp-bar-small').style.width = newHP + '%';`
+            `document.getElementById('player1-hp-bar-text').textContent = newHP + ' HP';`
 
-        3.  **İsim Güncellemesi:** Oyuncu 1'in adı değiştiğinde, `player1-name-bar` elementinin metin içeriğini güncelleyin.
-            Örnek: `document.getElementById('player1-name-bar').textContent = karakterinAdi;`
+        3.  **Name Update:** When Player 1's name changes, update the text content of the `player1-name-bar` element.
+            Example: `document.getElementById('player1-name-bar').textContent = characterName;`
 
-        4.  **İstatistik Güncellemesi:** Oyuncu 1'in level, ATK, DEF ve CRIT istatistikleri değiştiğinde, ilgili `span` elementlerinin (`player1-level-bar`, `player1-atk-bar`, `player1-def-bar`, `player1-crit-bar`) metin içeriklerini güncelleyin.
-            Örnek:
-            `document.getElementById('player1-level-bar').textContent = karakterinLeveli;`
-            `document.getElementById('player1-atk-bar').textContent = karakterinATK;`
-            `document.getElementById('player1-def-bar').textContent = karakterinDEF;`
-            `document.getElementById('player1-crit-bar').textContent = karakterinCRIT + '%';`
+        4.  **Stats Update:** When Player 1's level, ATK, DEF, and CRIT stats change, update the text content of the corresponding `span` elements (`player1-level-bar`, `player1-atk-bar`, `player1-def-bar`, `player1-crit-bar`).
+            Example:
+            `document.getElementById('player1-level-bar').textContent = characterLevel;`
+            `document.getElementById('player1-atk-bar').textContent = characterATK;`
+            `document.getElementById('player1-def-bar').textContent = characterDEF;`
+            `document.getElementById('player1-crit-bar').textContent = characterCRIT + '%';`
 
-        Bu güncellemeler yapıldığında, oyuncu 1'in bilgileri üst bardan doğru bir şekilde görüntülenecek ve savaş sırasında can düşüşü de bu bar üzerinde yansıyacaktır.
+        When these updates are made, Player 1's information will be displayed correctly in the top bar, and HP drops during battle will also be reflected on this bar.
     -->
 </body>
 </html>
