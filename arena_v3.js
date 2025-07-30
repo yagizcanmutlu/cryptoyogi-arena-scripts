@@ -248,40 +248,69 @@ async function initializeGame() {
 
     gameContainer.style.display = 'none';
     itemSelectionScreen.style.display = 'none'; // Item seçim ekranını gizle
-    characterSelectionScreen.style.display = 'flex';
+    characterSelectionScreen.style.display = 'flex'; // Karakter seçim ekranını göster
     characterGrid.innerHTML = '';
     selectCharacterButton.classList.add('disabled');
     selectCharacterButton.disabled = true;
     restartButton.classList.add('hidden');
     disableItemSlots(); // Item slotlarını devre dışı bırak
 
+    // Cüzdan adresi henüz alınmadıysa, bekleme mesajını göster ve geri dön
     if (!playerWalletAddress) {
         displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
         loadingNFTsMessage.style.display = 'block';
         loadingNFTsMessage.textContent = 'Cüzdan bilgisi bekleniyor...';
-        return;
+        return; // postMessage dinleyicisi tarafından tekrar çağrılacak
     }
 
-    setTimeout(async () => {
+    // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
+    loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // Yükleme mesajını güncelle
+    loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
+
+    const playerNFTs = [];
+    const opponentNFTs = [];
+
+    try {
         allFetchedNFTs = await fetchNFTsFromAirtable();
         const cleanedPlayerWalletAddress = playerWalletAddress ? playerWalletAddress.toLowerCase().trim() : null;
-        const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress);
-        opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() !== cleanedPlayerWalletAddress);
+        
+        allFetchedNFTs.forEach(nft => {
+            if (nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress) {
+                playerNFTs.push(nft);
+            } else {
+                opponentNFTs.push(nft);
+            }
+        });
 
         displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
-        loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...';
+        loadingNFTsMessage.style.display = 'none'; // Yükleme tamamlandığında gizle
 
         if (playerNFTs.length > 0) {
             displayNFTsForSelection(playerNFTs);
         } else {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
+            selectCharacterButton.classList.add('disabled'); // NFT yoksa butonu devre dışı bırak
+            selectCharacterButton.disabled = true;
         }
-    }, 500);
+    } catch (error) {
+        gameMessagesElement.textContent = `NFT'ler yüklenirken bir sorun oluştu: ${error.message}. Lütfen konsolu kontrol edin ve Airtable ayarlarınızı doğrulayın.`;
+        console.error('initializeGame hatası:', error);
+        loadingNFTsMessage.textContent = 'NFT yüklenirken hata oluştu.';
+        loadingNFTsMessage.style.display = 'block';
+        selectCharacterButton.classList.add('disabled');
+        selectCharacterButton.disabled = true;
+    }
 }
 
 // Seçim için NFT'leri gösteren fonksiyon
 function displayNFTsForSelection(nfts) {
     characterGrid.innerHTML = '';
+    if (nfts.length === 0) {
+        characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı.</p>';
+        selectCharacterButton.classList.add('disabled');
+        selectCharacterButton.disabled = true;
+        return;
+    }
     nfts.forEach(nft => {
         const card = document.createElement('div');
         card.classList.add('character-selection-card');
