@@ -603,7 +603,7 @@
         /* Karakter Seçim Ekranı */
         .character-selection-screen {
             /* Arka plan görseli eklendi ve opaklık ayarlandı */
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(10, 10, 10, 0.6) 100%), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a35914866d06a9bb7f3d_chr_bg768.png');
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.5) 0%, rgba(10, 10, 10, 0.6) 100%), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a35914866d06a9c46dbc1_arena_bg.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -645,13 +645,12 @@
         }
 
         .character-selection-card {
-            /* Arka plan görseli kaldırıldı, transparan blur glass efekti eklendi */
-            background: linear-gradient(135deg, rgba(42, 42, 42, 0.1), rgba(26, 26, 26, 0.2)); /* Daha şeffaf bir gradient */
-            backdrop-filter: blur(10px); /* Buzlu cam (blur) efekti */
-            -webkit-backdrop-filter: blur(10px); /* Safari desteği */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Hafif beyaz kenarlık */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-            /* Diğer mevcut stiller */
+            /* Arka plan şeffaflığı artırıldı ve yeni GIF eklendi */
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.5), rgba(26, 26, 26, 0.6)), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a4676d674aed0a9bb7f3d_chr_bg768.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 2px solid var(--neon-purple);
             border-radius: 15px;
             padding: 15px;
             display: flex;
