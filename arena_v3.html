@@ -859,6 +859,33 @@
             flex-shrink: 0;
         }
 
+        .player-bar-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .player-bar-stat-item {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 2px 5px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .player-bar-stat-value {
+            color: var(--neon-green);
+            font-weight: 700;
+            text-shadow: 0 0 3px rgba(0, 255, 65, 0.7);
+        }
+
+
         /* Duyarlı Tasarım (Mobil Uyumlu) */
         @media (max-width: 768px) {
             .game-container, .character-selection-screen {
@@ -979,6 +1006,17 @@
             .player-bar-hp-text {
                 font-size: 0.8rem;
             }
+
+            .player-bar-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .player-bar-stat-item {
+                padding: 1px 3px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -1012,12 +1050,20 @@
             <!-- Oyuncu 1 (Sen) Barı -->
             <div class="player-bar" id="player1-bar">
                 <div class="player-bar-avatar">
-                    <img id="player1-avatar" src="https://placehold.co/60x60/8000ff/ffffff?text=P1" alt="Player 1 Avatar">
+                    <!-- NFT görseli buraya gelecek. JavaScript'ten güncellenmeli. -->
+                    <img id="player1-avatar" src="https://placehold.co/60x60/8000ff/ffffff?text=P1" alt="Oyuncu 1 Avatarı">
                 </div>
                 <div class="player-bar-info">
                     <div class="player-bar-name" id="player1-name-bar">SEN</div>
                     <div class="player-bar-hp-container">
                         <div id="player1-hp-bar-small" class="player-bar-hp" style="width: 100%;"></div>
+                    </div>
+                    <!-- Oyuncu istatistikleri buraya eklendi -->
+                    <div class="player-bar-stats">
+                        <div class="player-bar-stat-item">LVL: <span id="player1-level-bar" class="player-bar-stat-value">?</span></div>
+                        <div class="player-bar-stat-item">ATK: <span id="player1-atk-bar" class="player-bar-stat-value">?</span></div>
+                        <div class="player-bar-stat-item">DEF: <span id="player1-def-bar" class="player-bar-stat-value">?</span></div>
+                        <div class="player-bar-stat-item">CRIT: <span id="player1-crit-bar" class="player-bar-stat-value">?%</span></div>
                     </div>
                 </div>
                 <span id="player1-hp-bar-text" class="player-bar-hp-text">100 HP</span>
@@ -1068,5 +1114,30 @@
     </div>
     <!-- JavaScript dosyanızı buraya bağlayın -->
     <script src="arena_v3.js"></script>
+    <!--
+        ÖNEMLİ NOT:
+        Yukarıdaki HTML değişiklikleri, oyuncu 1'in (sizin) bilgilerini üstteki bara taşımıştır.
+        Bu bilgilerin doğru şekilde görünmesi ve güncellenmesi için "arena_v3.js" dosyanızda aşağıdaki değişiklikleri yapmanız gerekmektedir:
+
+        1.  **NFT Görseli:** Oyuncu 1'in NFT görselini yüklediğinizde, bu görseli `player1-avatar` elementinin `src` özelliğine atayın.
+            Örnek: `document.getElementById('player1-avatar').src = karakterinNFTGorseliURL;`
+
+        2.  **Can (HP) Güncellemesi:** Oyuncu 1'in canı değiştiğinde, hem `player1-hp-bar-small` elementinin `width` stilini, hem de `player1-hp-bar-text` elementinin metin içeriğini güncelleyin.
+            Örnek:
+            `document.getElementById('player1-hp-bar-small').style.width = yeniHP + '%';`
+            `document.getElementById('player1-hp-bar-text').textContent = yeniHP + ' HP';`
+
+        3.  **İsim Güncellemesi:** Oyuncu 1'in adı değiştiğinde, `player1-name-bar` elementinin metin içeriğini güncelleyin.
+            Örnek: `document.getElementById('player1-name-bar').textContent = karakterinAdi;`
+
+        4.  **İstatistik Güncellemesi:** Oyuncu 1'in level, ATK, DEF ve CRIT istatistikleri değiştiğinde, ilgili `span` elementlerinin (`player1-level-bar`, `player1-atk-bar`, `player1-def-bar`, `player1-crit-bar`) metin içeriklerini güncelleyin.
+            Örnek:
+            `document.getElementById('player1-level-bar').textContent = karakterinLeveli;`
+            `document.getElementById('player1-atk-bar').textContent = karakterinATK;`
+            `document.getElementById('player1-def-bar').textContent = karakterinDEF;`
+            `document.getElementById('player1-crit-bar').textContent = karakterinCRIT + '%';`
+
+        Bu güncellemeler yapıldığında, oyuncu 1'in bilgileri üst bardan doğru bir şekilde görüntülenecek ve savaş sırasında can düşüşü de bu bar üzerinde yansıyacaktır.
+    -->
 </body>
 </html>
