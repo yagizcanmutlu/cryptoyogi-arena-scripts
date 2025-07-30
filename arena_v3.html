@@ -645,12 +645,13 @@
         }
 
         .character-selection-card {
-            /* Arka plan şeffaflığı artırıldı ve yeni GIF eklendi */
-            background: linear-gradient(135deg, rgba(42, 42, 42, 0.5), rgba(26, 26, 26, 0.6)), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a4676d674aed0a9bb7f3d_chr_bg768.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: 2px solid var(--neon-purple);
+            /* Arka plan görseli kaldırıldı, transparan blur glass efekti eklendi */
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.3), rgba(26, 26, 26, 0.4)); /* Daha şeffaf bir gradient */
+            backdrop-filter: blur(10px); /* Buzlu cam (blur) efekti */
+            -webkit-backdrop-filter: blur(10px); /* Safari desteği */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Hafif beyaz kenarlık */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            /* Diğer mevcut stiller */
             border-radius: 15px;
             padding: 15px;
             display: flex;
