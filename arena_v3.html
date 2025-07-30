@@ -151,21 +151,22 @@
         /* Ana Oyun İçeriği Düzeni */
         .main-game-content {
             display: flex;
-            flex-direction: row;
+            flex-direction: column; /* Dikey düzen */
             justify-content: center;
-            align-items: flex-start;
-            gap: 30px;
+            align-items: center;
+            gap: 20px; /* Boşluk azaltıldı */
             width: 100%;
             margin-bottom: 30px;
         }
 
         .player-areas-wrapper {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Ortalandı */
             align-items: flex-start;
             gap: 30px;
             flex-grow: 1;
-            max-width: 800px;
+            width: 100%; /* Tam genişlik */
+            max-width: 800px; /* Maksimum genişlik korundu */
         }
 
         /* Oyuncu Alanları */
@@ -187,8 +188,7 @@
         }
 
         #player1-area {
-            border: 2px solid var(--neon-purple);
-            box-shadow: 0 0 15px rgba(128, 0, 255, 0.2), inset 0 0 10px rgba(128, 0, 255, 0.1);
+            display: none; /* Oyuncu 1 alanı gizlendi, yerine player-bar kullanılacak */
         }
 
         #player2-area {
@@ -788,6 +788,77 @@
             text-align: center;
         }
 
+        /* Yeni Eklenen Oyuncu Barı Stilleri */
+        .player-bar {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(26, 26, 26, 0.8), rgba(10, 10, 10, 0.9));
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            width: 90%; /* Genişlik ayarlandı */
+            max-width: 600px; /* Maksimum genişlik */
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 15px rgba(128, 0, 255, 0.3), inset 0 0 10px rgba(128, 0, 255, 0.1);
+        }
+
+        .player-bar-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-green);
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .player-bar-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-bar-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-bar-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .player-bar-hp-container {
+            width: 100%;
+            height: 15px;
+            background: linear-gradient(135deg, #222, #111);
+            border: 1px solid var(--neon-green);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .player-bar-hp {
+            height: 100%;
+            background: linear-gradient(45deg, var(--neon-green), #00ff80);
+            border-radius: 6px;
+            transition: width 0.8s ease-out;
+        }
+
+        .player-bar-hp-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.7);
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
         /* Duyarlı Tasarım (Mobil Uyumlu) */
         @media (max-width: 768px) {
             .game-container, .character-selection-screen {
@@ -886,6 +957,28 @@
             .character-selection-screen {
                 margin-top: 50px; /* Üstten boşluk eklendi */
             }
+
+            /* Oyuncu barı mobil uyumluluğu */
+            .player-bar {
+                flex-direction: row; /* Yatay kalacak */
+                width: 98%;
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+
+            .player-bar-avatar {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+
+            .player-bar-name {
+                font-size: 1rem;
+            }
+
+            .player-bar-hp-text {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -916,6 +1009,20 @@
 
         <!-- Ana Oyun İçeriği -->
         <div class="main-game-content">
+            <!-- Oyuncu 1 (Sen) Barı -->
+            <div class="player-bar" id="player1-bar">
+                <div class="player-bar-avatar">
+                    <img id="player1-avatar" src="https://placehold.co/60x60/8000ff/ffffff?text=P1" alt="Player 1 Avatar">
+                </div>
+                <div class="player-bar-info">
+                    <div class="player-bar-name" id="player1-name-bar">SEN</div>
+                    <div class="player-bar-hp-container">
+                        <div id="player1-hp-bar-small" class="player-bar-hp" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <span id="player1-hp-bar-text" class="player-bar-hp-text">100 HP</span>
+            </div>
+
             <div class="player-areas-wrapper">
                 <!-- Oyuncu 2 (Rakip) Alanı -->
                 <div class="player-area" id="player2-area">
@@ -932,8 +1039,8 @@
                         <div class="character-stats" id="player2-character-stats"></div>
                     </div>
                 </div>
-                <!-- Oyuncu 1 (Sen) Alanı -->
-                <div class="player-area" id="player1-area">
+                <!-- Oyuncu 1 (Sen) Alanı - Bu kısım gizlendi -->
+                <div class="player-area hidden" id="player1-area">
                     <div class="player-info-top">
                         <h2 id="player1-name-display">SEN</h2>
                         <p class="text-lg font-bold mb-2"><span id="player1-hp" style="color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);">100</span> HP</p>
