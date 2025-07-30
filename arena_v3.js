@@ -194,7 +194,15 @@ async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıl
                 wallet: record.fields.wallet || null,
                 level: record.fields.level || 1, // Level bilgisini ekle
                 critChance: record.fields.crit_chance || 0.2, // Crit Chance bilgisini ekle
-                items: record.fields.items ? JSON.parse(record.fields.items) : [] // Items bilgisini ekle (JSON string olarak geliyorsa parse et)
+                // Safely parse items, default to empty array if parsing fails or field is missing
+                items: (() => {
+                    try {
+                        return record.fields.items ? JSON.parse(record.fields.items) : [];
+                    } catch (e) {
+                        console.error(`Error parsing items for NFT ${record.fields.nft_name_list || record.id}:`, e);
+                        return []; // Return empty array on error
+                    }
+                })()
             };
         });
     } catch (error) {
@@ -642,8 +650,9 @@ async function sendBattleResultToWebhook(winner, battleId) {
         winner: winner
     };
 
-    // console.log('Webhook Payload Object:', payload); // Debug: Payload nesnesini logla
-    // console.log('Webhook Payload JSON:', JSON.stringify(payload)); // Debug: JSON stringini logla
+    // Make.com'a gönderilecek payload'ı konsola yazdırıyoruz.
+    // Bu, Make.com'a giden verinin içeriğini kontrol etmenizi sağlar.
+    console.log('Sending payload to webhook:', payload); 
 
     try {
         const response = await fetch(WEBHOOK_URL, {
