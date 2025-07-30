@@ -151,23 +151,21 @@
         /* Ana Oyun İçeriği Düzeni */
         .main-game-content {
             display: flex;
-            flex-direction: column; /* Dikey hizalama */
+            flex-direction: row;
             justify-content: center;
-            align-items: center;
-            gap: 20px; /* Boşluk azaltıldı */
+            align-items: flex-start;
+            gap: 30px;
             width: 100%;
-            margin-bottom: 20px; /* Alt boşluk azaltıldı */
+            margin-bottom: 30px;
         }
 
         .player-areas-wrapper {
             display: flex;
-            justify-content: center; /* Ortaya hizalama */
+            justify-content: space-between;
             align-items: flex-start;
             gap: 30px;
             flex-grow: 1;
             max-width: 800px;
-            flex-direction: column; /* Dikey hizalama */
-            align-items: center;
         }
 
         /* Oyuncu Alanları */
@@ -188,8 +186,9 @@
             transition: all 0.3s ease;
         }
 
-        #player1-area { /* Bu alan artık kullanılmadığı için stilini kaldırabiliriz veya başka bir amaçla kullanabiliriz */
-            display: none; /* Gizlendi */
+        #player1-area {
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 15px rgba(128, 0, 255, 0.2), inset 0 0 10px rgba(128, 0, 255, 0.1);
         }
 
         #player2-area {
@@ -224,6 +223,7 @@
                 transform: scale(1);
             }
             100% {
+                box-shadow: 0 0 50px rgba(255, 0, 128, 1), inset 0 0 50px rgba(255, 0, 128, 0.4);
                 transform: scale(1.02);
             }
         }
@@ -446,13 +446,11 @@
         /* Oyun Butonları Yan Çubuk */
         .game-buttons-sidebar {
             display: flex;
-            flex-direction: row; /* Butonları yatay hizala */
+            flex-direction: column;
             gap: 20px;
             padding: 20px;
-            justify-content: center; /* Ortaya hizala */
-            width: 100%; /* Genişliği ayarla */
-            max-width: 400px; /* Maksimum genişlik */
-            margin-top: 20px; /* Üst boşluk */
+            min-width: 180px;
+            align-items: center;
         }
 
         /* Genel Oyun Buton Stili */
@@ -469,7 +467,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            flex: 1; /* Butonların eşit genişlikte olmasını sağla */
+            width: 100%;
             box-shadow: 0 5px 15px rgba(255, 0, 128, 0.3);
         }
 
@@ -647,11 +645,8 @@
         }
 
         .character-selection-card {
-            /* Arka plan görseli geri getirildi, şeffaflık ve blur ayarlandı */
-            background: linear-gradient(135deg, rgba(42, 42, 42, 0.05), rgba(26, 26, 26, 0.1)), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a4676d674aed0a9bb7f3d_chr_bg768.png');
-            background-size: cover; /* Görselin kartı kaplamasını sağla */
-            background-position: center; /* Görseli ortala */
-            background-repeat: no-repeat; /* Görselin tekrarlamamasını sağla */
+            /* Arka plan görseli kaldırıldı, transparan blur glass efekti eklendi */
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.05), rgba(26, 26, 26, 0.1)); /* Daha şeffaf bir gradient */
             backdrop-filter: blur(5px); /* Buzlu cam (blur) efekti azaltıldı */
             -webkit-backdrop-filter: blur(5px); /* Safari desteği */
             border: 1px solid rgba(255, 255, 255, 0.2); /* Hafif beyaz kenarlık */
@@ -794,146 +789,6 @@
             text-align: center;
         }
 
-        /* Yeni Oyuncu Bilgi Çubuğu */
-        .player-top-info-bar {
-            width: 90%;
-            max-width: 600px;
-            background: linear-gradient(90deg, rgba(128, 0, 255, 0.2), rgba(0, 255, 255, 0.2));
-            border: 2px solid var(--neon-purple);
-            border-radius: 15px;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(128, 0, 255, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .player-top-info-bar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: bar-scan 3s linear infinite;
-        }
-
-        @keyframes bar-scan {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 100%;
-            }
-        }
-
-        .player-top-info-bar .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--neon-green);
-            flex-shrink: 0;
-            margin-right: 15px;
-        }
-
-        .player-top-info-bar .info-section {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .player-top-info-bar .name-level {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--neon-green);
-            text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .player-top-info-bar .name-level .level-tag {
-            background: var(--neon-purple);
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            color: white;
-            font-weight: 600;
-        }
-
-        .player-top-info-bar .hp-bar-container-small {
-            width: 100%;
-            height: 15px;
-            background: linear-gradient(135deg, #222, #111);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .player-top-info-bar .hp-bar-small {
-            height: 100%;
-            background: linear-gradient(45deg, var(--neon-green), #00ff80);
-            border-radius: 6px;
-            transition: width 0.8s ease-out;
-            position: relative;
-        }
-        .player-top-info-bar .hp-text-small {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-            z-index: 1;
-        }
-
-        .player-top-info-bar .stats-section {
-            display: flex;
-            gap: 10px;
-            margin-left: 20px;
-            flex-shrink: 0;
-        }
-
-        .player-top-info-bar .stat-item {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--neon-cyan);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .vs-text {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--neon-pink);
-            text-shadow: 0 0 20px rgba(255, 0, 128, 0.8);
-            margin: 20px 0;
-            animation: vs-pulse 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes vs-pulse {
-            0% {
-                transform: scale(1);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-        }
-
         /* Duyarlı Tasarım (Mobil Uyumlu) */
         @media (max-width: 768px) {
             .game-container, .character-selection-screen {
@@ -1032,26 +887,6 @@
             .character-selection-screen {
                 margin-top: 50px; /* Üstten boşluk eklendi */
             }
-
-            /* Yeni Oyuncu Bilgi Çubuğu Mobil Uyarlamaları */
-            .player-top-info-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 10px;
-                width: 95%;
-            }
-
-            .player-top-info-bar .avatar {
-                margin-bottom: 10px;
-                margin-right: 0;
-            }
-
-            .player-top-info-bar .stats-section {
-                margin-left: 0;
-                margin-top: 10px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
         }
     </style>
 </head>
@@ -1082,28 +917,6 @@
 
         <!-- Ana Oyun İçeriği -->
         <div class="main-game-content">
-            <!-- Oyuncu Bilgi Çubuğu (Üstte) -->
-            <div class="player-top-info-bar" id="player-top-info-bar">
-                <img id="player1-avatar-small" src="https://placehold.co/50x50/6c757d/FFFFFF?text=P1" alt="Player 1 Avatar" class="avatar">
-                <div class="info-section">
-                    <div class="name-level">
-                        <span id="player1-name-display-small">SEN</span>
-                        <span id="player1-level-small" class="level-tag">Lv.5</span>
-                    </div>
-                    <div class="hp-bar-container-small">
-                        <div id="player1-hp-bar-small" class="hp-bar-small" style="width: 100%;"></div>
-                        <span id="player1-hp-text-small" class="hp-text-small">100 HP</span>
-                    </div>
-                </div>
-                <div class="stats-section">
-                    <span class="stat-item"><span class="text-red-400">⚔️</span> <span id="player1-atk-small">50</span></span>
-                    <span class="stat-item"><span class="text-green-400">🛡️</span> <span id="player1-def-small">30</span></span>
-                    <span class="stat-item"><span class="text-purple-400">💥</span> <span id="player1-crit-small">20%</span></span>
-                </div>
-            </div>
-
-            <div class="vs-text">VS</div>
-
             <div class="player-areas-wrapper">
                 <!-- Oyuncu 2 (Rakip) Alanı -->
                 <div class="player-area" id="player2-area">
@@ -1118,6 +931,21 @@
                     <div class="character-info-bottom">
                         <div class="character-name" id="player2-character-name"></div>
                         <div class="character-stats" id="player2-character-stats"></div>
+                    </div>
+                </div>
+                <!-- Oyuncu 1 (Sen) Alanı -->
+                <div class="player-area" id="player1-area">
+                    <div class="player-info-top">
+                        <h2 id="player1-name-display">SEN</h2>
+                        <p class="text-lg font-bold mb-2"><span id="player1-hp" style="color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);">100</span> HP</p>
+                        <div class="hp-bar-container">
+                            <div id="player1-hp-bar" class="hp-bar" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <div class="character-card-visual" id="player1-character-card-visual"></div>
+                    <div class="character-info-bottom">
+                        <div class="character-name" id="player1-character-name"></div>
+                        <div class="character-stats" id="player1-character-stats"></div>
                     </div>
                 </div>
             </div>
