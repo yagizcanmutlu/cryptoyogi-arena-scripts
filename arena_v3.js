@@ -18,17 +18,18 @@ const WEBHOOK_URL = "https://hook.eu2.make.com/5fqovqqnwl1ihdjnqsvywi6y325j7ma5"
 
 // Karakter sınıfı tanımı
 class Character {
-    constructor(id, name, atk, def, initialHp, imageUrl) {
+    constructor(id, name, atk, def, initialHp, imageUrl, level, critChance) { // Level ve critChance eklendi
         this.id = id;
         this.name = name;
         this.baseAtk = atk;
         this.baseDef = def;
         this.currentHp = initialHp;
         this.imageUrl = imageUrl;
+        this.level = level || 1; // Varsayılan level 1
+        this.criticalChance = critChance || 0.2; // Varsayılan kritik vuruş şansı
         this.buffActive = false; // Buff aktif mi
         this.buffTurnsLeft = 0; // Buff kaç tur sürecek
         this.buffAmount = 15; // Buff ile artan saldırı gücü
-        this.criticalChance = 0.2; // Kritik vuruş şansı
         this.criticalMultiplier = 1.5; // Kritik vuruş çarpanı
     }
 
@@ -69,7 +70,7 @@ class Character {
         }
     }
 
-    // Karakterin istatistik HTML'ini döndürür
+    // Karakterin istatistik HTML'ini döndürür (eski kart görünümü için)
     toStatsHtml(playerName, playerLevel) {
         let buffStatus = this.buffActive ? `<span class="character-stat-item text-yellow-300">🔥 BUFF: +${this.buffAmount} AP (${this.buffTurnsLeft} tur)</span>` : '';
         return `
@@ -89,7 +90,8 @@ class Player {
         this.level = level;
         this.otherInfo = otherInfo;
         this.isAI = isAI;
-        this.character = new Character(characterData.id, characterData.name, characterData.atk, characterData.def, initialHp, characterData.imageUrl);
+        // Character sınıfına level ve critChance parametreleri eklendi
+        this.character = new Character(characterData.id, characterData.name, characterData.atk, characterData.def, initialHp, characterData.imageUrl, characterData.level, characterData.critChance);
     }
 }
 
@@ -112,9 +114,22 @@ const characterGrid = document.getElementById('character-grid');
 const selectCharacterButton = document.getElementById('select-character-button');
 const loadingNFTsMessage = document.getElementById('loading-nfts');
 
+// Oyuncu 1 (Sen) Barı elementleri
+const player1Bar = document.getElementById('player1-bar');
+const player1Avatar = document.getElementById('player1-avatar');
+const player1NameBar = document.getElementById('player1-name-bar');
+const player1HpBarSmall = document.getElementById('player1-hp-bar-small');
+const player1HpBarText = document.getElementById('player1-hp-bar-text');
+const player1LevelBar = document.getElementById('player1-level-bar');
+const player1AtkBar = document.getElementById('player1-atk-bar');
+const player1DefBar = document.getElementById('player1-def-bar');
+const player1CritBar = document.getElementById('player1-crit-bar');
+
+
+// Oyuncu 1 (Sen) Alanı - Bu kısım gizlendiği için güncellenmeyecek, sadece referans olarak duruyor
 const player1Area = document.getElementById('player1-area');
-const player1HpBar = document.getElementById('player1-hp-bar');
-const player1HpText = document.getElementById('player1-hp');
+const player1HpBar = document.getElementById('player1-hp-bar'); // Eski büyük can barı
+const player1HpText = document.getElementById('player1-hp'); // Eski büyük can text
 const player1CharacterCardVisualElement = document.getElementById('player1-character-card-visual');
 const player1CharacterNameElement = document.getElementById('player1-character-name');
 const player1CharacterStatsElement = document.getElementById('player1-character-stats');
@@ -174,7 +189,9 @@ async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıl
                 atk: record.fields.ap || 50,
                 def: record.fields.dp || 30,
                 imageUrl: imageUrl,
-                wallet: record.fields.wallet || null
+                wallet: record.fields.wallet || null,
+                level: record.fields.level || 1, // Level bilgisini ekle
+                critChance: record.fields.crit_chance || 0.2 // Crit Chance bilgisini ekle
             };
         });
     } catch (error) {
@@ -280,6 +297,7 @@ function displayNFTsForSelection(nfts) {
             <img src="${nft.imageUrl}" alt="${nft.name}" onerror="this.onerror=null;this.src='https://placehold.co/150x150/6c757d/FFFFFF?text=NFT+ERROR';">
             <h3>${nft.name}</h3>
             <p>ATK: ${nft.atk} | DEF: ${nft.def}</p>
+            <p>LVL: ${nft.level} | CRIT: ${(nft.critChance * 100).toFixed(0)}%</p>
         `;
         card.addEventListener('click', () => selectNFT(nft, card));
         characterGrid.appendChild(card);
@@ -317,7 +335,8 @@ async function startGameWithSelectedNFT() {
             player1Name = fetchedName;
         }
     }
-    player1 = new Player(player1Name, initialPlayerHp, 5, 'Siz', false, selectedPlayerNFT);
+    // Player sınıfına level ve critChance bilgileri CharacterData üzerinden geçiriliyor
+    player1 = new Player(player1Name, initialPlayerHp, selectedPlayerNFT.level, 'Siz', false, selectedPlayerNFT);
     currentBattleId = player1.character.id; // Battle ID'nin player1'in karakter ID'si olduğundan emin olalım
 
     let player2Name = "RAKİP";
@@ -341,7 +360,8 @@ async function startGameWithSelectedNFT() {
         }
     }
     
-    player2 = new Player(player2Name, initialPlayerHp, 4, 'Rakip', true, player2CharacterData);
+    // Player sınıfına level ve critChance bilgileri CharacterData üzerinden geçiriliyor
+    player2 = new Player(player2Name, initialPlayerHp, player2CharacterData.level, 'Rakip', true, player2CharacterData);
 
     currentPlayer = player1;
     gameActive = true;
@@ -379,17 +399,19 @@ async function startGameWithSelectedNFT() {
 
 // Kullanıcı arayüzünü güncelleyen fonksiyon
 function updateUI() {
-    player1NameDisplay.textContent = player1.name;
+    // Oyuncu 1 (Sen) Barı Güncellemesi
+    player1Avatar.src = player1.character.imageUrl;
+    player1NameBar.textContent = player1.name;
+    player1HpBarSmall.style.width = `${Math.max(0, (player1.character.currentHp / initialPlayerHp) * 100)}%`;
+    player1HpBarText.textContent = `${Math.max(0, player1.character.currentHp)} HP`;
+    player1LevelBar.textContent = player1.character.level;
+    player1AtkBar.textContent = player1.character.effectiveAtk;
+    player1DefBar.textContent = player1.character.effectiveDef;
+    player1CritBar.textContent = `${(player1.character.criticalChance * 100).toFixed(0)}%`;
+
+
+    // Oyuncu 2 (Rakip) Alanı Güncellemesi (eski kart görünümü)
     player2NameDisplay.textContent = player2.name;
-
-    const p1Hp = (player1.character.currentHp / initialPlayerHp) * 100;
-    player1HpText.textContent = Math.max(0, player1.character.currentHp);
-    player1HpBar.style.width = `${Math.max(0, p1Hp)}%`;
-    player1HpBar.classList.toggle('low-hp', p1Hp <= 30);
-    player1CharacterCardVisualElement.innerHTML = player1.character.toVisualHtml();
-    player1CharacterNameElement.textContent = player1.character.toNameHtml();
-    player1CharacterStatsElement.innerHTML = player1.character.toStatsHtml(player1.name, player1.level);
-
     const p2Hp = (player2.character.currentHp / initialPlayerHp) * 100;
     player2HpText.textContent = Math.max(0, player2.character.currentHp);
     player2HpBar.style.width = `${Math.max(0, p2Hp)}%`;
@@ -398,7 +420,10 @@ function updateUI() {
     player2CharacterNameElement.textContent = player2.character.toNameHtml();
     player2CharacterStatsElement.innerHTML = player2.character.toStatsHtml(player2.name, player2.level);
 
-    player1Area.classList.toggle('current-player-glow', currentPlayer === player1);
+    // Oyuncu glow efektleri (hala rakip kartında aktif olacak)
+    // Oyuncu 1'in büyük kart alanı gizlendiği için bu kısım artık sadece player2Area için geçerli.
+    // Ancak, currentPlayer'ın player1 olup olmadığını kontrol ederek yine de doğru şekilde çalışır.
+    player1Area.classList.toggle('current-player-glow', currentPlayer === player1); // Bu satır artık görünür bir etki yaratmayacak
     player2Area.classList.toggle('current-player-glow', currentPlayer === player2);
 
     if (gameActive && !currentPlayer.isAI) {
@@ -433,13 +458,24 @@ function handleAttack() {
 
     const attacker = currentPlayer.character;
     const defender = (currentPlayer === player1) ? player2.character : player1.character;
-    const defenderVisualElement = (currentPlayer === player1) ? player2CharacterCardVisualElement : player1CharacterCardVisualElement;
-    const attackerVisualElement = (currentPlayer === player1) ? player1CharacterCardVisualElement : player2CharacterCardVisualElement;
+    const defenderVisualElement = (currentPlayer === player1) ? player2CharacterCardVisualElement : player1CharacterCardVisualElement; // Rakip kart görseli
+    const attackerVisualElement = (currentPlayer === player1) ? player1Avatar : player2CharacterCardVisualElement; // Saldıranın görseli (player1 için avatar, player2 için kart)
 
-    attackerVisualElement.classList.add('attacking');
-    setTimeout(() => {
-        attackerVisualElement.classList.remove('attacking');
-    }, 800);
+    // Saldıranın görseline animasyon ekle
+    if (currentPlayer === player1) {
+        // Player 1 için avatarın kendisi sallanabilir veya başka bir efekt eklenebilir
+        player1Avatar.style.transform = 'scale(1.1)';
+        player1Avatar.style.transition = 'transform 0.2s ease-in-out';
+        setTimeout(() => {
+            player1Avatar.style.transform = 'scale(1)';
+        }, 200);
+    } else {
+        attackerVisualElement.classList.add('attacking');
+        setTimeout(() => {
+            attackerVisualElement.classList.remove('attacking');
+        }, 800);
+    }
+
 
     let damage = Math.max(0, attacker.effectiveAtk - defender.effectiveDef);
     let message = `${currentPlayer.name}'in ${attacker.name} saldırdı! `;
@@ -469,15 +505,25 @@ function handleBuff() {
     disableActionButtons();
 
     const playerCharacter = currentPlayer.character;
-    const playerVisualElement = (currentPlayer === player1) ? player1CharacterCardVisualElement : player2CharacterCardVisualElement;
+    const playerVisualElement = (currentPlayer === player1) ? player1Avatar : player2CharacterCardVisualElement; // Bufflanan görseli (player1 için avatar, player2 için kart)
 
     playerCharacter.applyBuff();
     gameMessagesElement.textContent = `${currentPlayer.name}'in ${playerCharacter.name} güçlendi! Saldırı gücü ${playerCharacter.buffTurnsLeft} tur boyunca arttı.`;
 
-    playerVisualElement.classList.add('buffed-animation');
-    setTimeout(() => {
-        playerVisualElement.classList.remove('buffed-animation');
-    }, 1500);
+    // Buff animasyonunu uygulayın
+    if (currentPlayer === player1) {
+        // Player 1 için avatarın kendisi parlayabilir veya başka bir efekt eklenebilir
+        player1Avatar.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.6)';
+        player1Avatar.style.transition = 'box-shadow 0.5s ease-in-out';
+        setTimeout(() => {
+            player1Avatar.style.boxShadow = 'none';
+        }, 1500);
+    } else {
+        playerVisualElement.classList.add('buffed-animation');
+        setTimeout(() => {
+            playerVisualElement.classList.remove('buffed-animation');
+        }, 1500);
+    }
 
     updateUI();
     setTimeout(() => {
@@ -523,10 +569,11 @@ function checkGameOver() {
         gameMessagesElement.textContent = winnerMessage;
 
         if (winnerPlayer) {
-            const winnerCardVisualElement = (winnerPlayer === player1) ? player1CharacterCardVisualElement : player2CharacterCardVisualElement;
-            winnerCardVisualElement.classList.add('winner-animation');
+            // Kazanan oyuncu player1 ise avatarını, player2 ise kartını hedefle
+            const winnerVisualElement = (winnerPlayer === player1) ? player1Avatar : player2CharacterCardVisualElement;
+            winnerVisualElement.classList.add('winner-animation');
             setTimeout(() => {
-                winnerCardVisualElement.classList.remove('winner-animation');
+                winnerVisualElement.classList.remove('winner-animation');
             }, 2000);
         }
 
@@ -556,14 +603,14 @@ async function sendBattleResultToWebhook(winner, battleId) {
             name: player1.name,
             character: player1.character.name,
             finalHp: Math.max(0, player1.character.currentHp),
-            level: player1.level,
+            level: player1.character.level, // Character'dan level al
             isAI: player1.isAI
         },
         player2: {
             name: player2.name,
             character: player2.character.name,
             finalHp: Math.max(0, player2.character.currentHp),
-            level: player2.level,
+            level: player2.character.level, // Character'dan level al
             isAI: player2.isAI
         },
         totalTurns: currentTurn,
