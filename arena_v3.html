@@ -224,7 +224,6 @@
                 transform: scale(1);
             }
             100% {
-                box-shadow: 0 0 50px rgba(255, 0, 128, 1), inset 0 0 50px rgba(255, 0, 128, 0.4);
                 transform: scale(1.02);
             }
         }
@@ -648,8 +647,11 @@
         }
 
         .character-selection-card {
-            /* Arka plan görseli kaldırıldı, transparan blur glass efekti eklendi */
-            background: linear-gradient(135deg, rgba(42, 42, 42, 0.05), rgba(26, 26, 26, 0.1)); /* Daha şeffaf bir gradient */
+            /* Arka plan görseli geri getirildi, şeffaflık ve blur ayarlandı */
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.05), rgba(26, 26, 26, 0.1)), url('https://cdn.prod.website-files.com/67fb1cd83af51c4fe96dacb2/688a4676d674aed0a9bb7f3d_chr_bg768.png');
+            background-size: cover; /* Görselin kartı kaplamasını sağla */
+            background-position: center; /* Görseli ortala */
+            background-repeat: no-repeat; /* Görselin tekrarlamamasını sağla */
             backdrop-filter: blur(5px); /* Buzlu cam (blur) efekti azaltıldı */
             -webkit-backdrop-filter: blur(5px); /* Safari desteği */
             border: 1px solid rgba(255, 255, 255, 0.2); /* Hafif beyaz kenarlık */
