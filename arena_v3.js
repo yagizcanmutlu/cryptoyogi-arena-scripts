@@ -31,6 +31,7 @@ class Character {
         this.buffTurnsLeft = 0; // Buff kaç tur sürecek
         this.buffAmount = 15; // Buff ile artan saldırı gücü
         this.criticalMultiplier = 1.5; // Kritik vuruş çarpanı
+        this.items = []; // Karakterin itemları için boş bir dizi
     }
 
     // Karakterin görsel HTML'ini döndürür
@@ -85,13 +86,14 @@ class Character {
 
 // Oyuncu sınıfı tanımı
 class Player {
-    constructor(name, initialHp, level = 1, otherInfo = '', isAI = false, characterData) {
+    constructor(name, initialHp, level = 1, otherInfo = '', isAI = false, characterData, items = []) { // items parametresi eklendi
         this.name = name;
         this.level = level;
         this.otherInfo = otherInfo;
         this.isAI = isAI;
         // Character sınıfına level ve critChance parametreleri eklendi
         this.character = new Character(characterData.id, characterData.name, characterData.atk, characterData.def, initialHp, characterData.imageUrl, characterData.level, characterData.critChance);
+        this.character.items = items; // Karakterin itemlarını ata
     }
 }
 
@@ -124,7 +126,7 @@ const player1LevelBar = document.getElementById('player1-level-bar');
 const player1AtkBar = document.getElementById('player1-atk-bar');
 const player1DefBar = document.getElementById('player1-def-bar');
 const player1CritBar = document.getElementById('player1-crit-bar');
-
+const player1ItemsBar = document.getElementById('player1-items-bar'); // Yeni item barı elementi
 
 // Oyuncu 1 (Sen) Alanı - Bu kısım gizlendiği için güncellenmeyecek, sadece referans olarak duruyor
 const player1Area = document.getElementById('player1-area');
@@ -191,7 +193,8 @@ async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıl
                 imageUrl: imageUrl,
                 wallet: record.fields.wallet || null,
                 level: record.fields.level || 1, // Level bilgisini ekle
-                critChance: record.fields.crit_chance || 0.2 // Crit Chance bilgisini ekle
+                critChance: record.fields.crit_chance || 0.2, // Crit Chance bilgisini ekle
+                items: record.fields.items ? JSON.parse(record.fields.items) : [] // Items bilgisini ekle (JSON string olarak geliyorsa parse et)
             };
         });
     } catch (error) {
@@ -336,7 +339,8 @@ async function startGameWithSelectedNFT() {
         }
     }
     // Player sınıfına level ve critChance bilgileri CharacterData üzerinden geçiriliyor
-    player1 = new Player(player1Name, initialPlayerHp, selectedPlayerNFT.level, 'Siz', false, selectedPlayerNFT);
+    // selectedPlayerNFT.items'ı Player constructor'ına ekledik
+    player1 = new Player(player1Name, initialPlayerHp, selectedPlayerNFT.level, 'Siz', false, selectedPlayerNFT, selectedPlayerNFT.items);
     currentBattleId = player1.character.id; // Battle ID'nin player1'in karakter ID'si olduğundan emin olalım
 
     let player2Name = "RAKİP";
@@ -361,7 +365,8 @@ async function startGameWithSelectedNFT() {
     }
     
     // Player sınıfına level ve critChance bilgileri CharacterData üzerinden geçiriliyor
-    player2 = new Player(player2Name, initialPlayerHp, player2CharacterData.level, 'Rakip', true, player2CharacterData);
+    // player2CharacterData.items'ı Player constructor'ına ekledik
+    player2 = new Player(player2Name, initialPlayerHp, player2CharacterData.level, 'Rakip', true, player2CharacterData, player2CharacterData.items);
 
     currentPlayer = player1;
     gameActive = true;
@@ -402,12 +407,32 @@ function updateUI() {
     // Oyuncu 1 (Sen) Barı Güncellemesi
     player1Avatar.src = player1.character.imageUrl;
     player1NameBar.textContent = player1.name;
-    player1HpBarSmall.style.width = `${Math.max(0, (player1.character.currentHp / initialPlayerHp) * 100)}%`;
+    const p1Hp = (player1.character.currentHp / initialPlayerHp) * 100;
+    player1HpBarSmall.style.width = `${Math.max(0, p1Hp)}%`;
     player1HpBarText.textContent = `${Math.max(0, player1.character.currentHp)} HP`;
+    // Düşük HP'de kırmızıya dönme
+    player1HpBarSmall.classList.toggle('low-hp', p1Hp <= 30);
+
     player1LevelBar.textContent = player1.character.level;
     player1AtkBar.textContent = player1.character.effectiveAtk;
     player1DefBar.textContent = player1.character.effectiveDef;
     player1CritBar.textContent = `${(player1.character.criticalChance * 100).toFixed(0)}%`;
+
+    // Item ikonlarını güncelle
+    player1ItemsBar.innerHTML = ''; // Mevcut itemları temizle
+    // player1.character.items dizisi boşsa veya tanımsızsa, varsayılan ikonları göster
+    const itemsToDisplay = player1.character.items && player1.character.items.length > 0 ? player1.character.items : [
+        { icon: '⚡' },
+        { icon: '🛡️' },
+        { icon: '💊' }
+    ];
+
+    itemsToDisplay.forEach(item => {
+        const itemIconDiv = document.createElement('div');
+        itemIconDiv.classList.add('player-bar-item-icon');
+        itemIconDiv.textContent = item.icon; // Item objesinde 'icon' özelliği olduğunu varsayıyoruz
+        player1ItemsBar.appendChild(itemIconDiv);
+    });
 
 
     // Oyuncu 2 (Rakip) Alanı Güncellemesi (eski kart görünümü)
