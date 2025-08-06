@@ -202,10 +202,10 @@
         }
 
         #player2-area {
-            border: 1px solid rgba(0, 255, 255, 0.5); /* Added subtle border */
-            box-shadow: 0 0 8px rgba(0, 255, 255, 0.2); /* Added subtle shadow */
-            background: none; /* Removed background */
-            padding: 0; /* Removed padding */
+            border: none; /* Removed border */
+            box-shadow: none; /* Removed box-shadow */
+            background: rgba(26, 26, 26, 0.2); /* Slightly transparent background */
+            padding: 15px; /* Added padding for content inside */
             max-width: 400px; /* Adjusted max-width for opponent card */
             margin-top: 0px; /* Adjusted margin-top for opponent card */
             gap: 20px; /* Added gap for elements inside player2-area */
@@ -324,7 +324,7 @@
 
         .hp-overlay-text .heart-icon {
             color: var(--neon-pink); /* Red heart */
-            font-size: 0.4em; /* Even smaller heart size */
+            font-size: 0.35em; /* Even smaller heart size */
         }
 
         /* Character Card Visual */
@@ -455,7 +455,7 @@
             align-items: center;
             justify-content: center;
             position: absolute; /* Changed to absolute for precise positioning */
-            bottom: 60px; /* Moved up to be visible and closer to buttons */
+            bottom: 100px; /* Moved up to be visible and closer to buttons */
             left: 50%;
             transform: translateX(-50%); /* Centered horizontally */
             width: 90%; /* Adjusted width */
@@ -495,7 +495,7 @@
             min-width: 180px;
             align-items: center;
             justify-content: center;
-            margin-top: 0px; /* Adjusted margin-top to be closer to opponent info */
+            margin-top: 15px; /* Adjusted margin-top to be closer to opponent info */
             margin-bottom: 0px; /* Removed margin-bottom as message bar is now below */
             width: 100%; /* Make buttons span full width of parent */
         }
