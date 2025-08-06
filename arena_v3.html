@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>NFT Karakter Savaşı - Cyberpunk Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -37,6 +37,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Telegram Web App Safe Area Adjustments */
+            padding-top: env(safe-area-inset-top, 20px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: env(safe-area-inset-right, 0px);
         }
 
         /* Cyber Background Effect */
@@ -112,13 +117,18 @@
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
             padding: 20px;
-            margin: 20px auto;
+            margin: 80px auto 20px auto;
             max-width: 1200px;
             position: relative;
             backdrop-filter: blur(10px);
             display: none; /* Hidden initially */
             flex-direction: column;
             align-items: center;
+            /* Ensure content respects safe areas within the container */
+            padding-top: calc(20px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(20px + env(safe-area-inset-left, 0px));
+            padding-right: calc(20px + env(safe-area-inset-right, 0px));
         }
 
         .game-container::before {
@@ -154,7 +164,7 @@
             flex-direction: column; /* Vertical layout */
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Reduced gap */
+            gap: 25px; /* Increased gap */
             width: 100%;
             margin-bottom: 30px;
         }
@@ -163,7 +173,7 @@
             display: flex;
             justify-content: center; /* Centered */
             align-items: flex-start;
-            gap: 30px;
+            gap: 35px; /* Increased gap between player areas */
             flex-grow: 1;
             width: 100%; /* Full width */
             max-width: 800px; /* Max width maintained */
@@ -197,6 +207,7 @@
             background: none; /* Removed background */
             padding: 0; /* Removed padding */
             max-width: 400px; /* Adjusted max-width for opponent card */
+            margin-top: -60px; /* Moved opponent card down */
         }
 
         .player-area::before {
@@ -258,7 +269,7 @@
             border-radius: 10px;
             overflow: hidden;
             margin: 0 auto;
-            position: relative;
+            position: relative; /* Essential for absolute positioning of text */
         }
 
         .hp-bar {
@@ -291,6 +302,28 @@
             100% {
                 box-shadow: 0 0 25px rgba(255, 0, 128, 1);
             }
+        }
+
+        /* HP Overlay Text */
+        .hp-overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            font-size: 0.9rem; /* Slightly smaller for better fit */
+            font-weight: 700;
+            color: #ffffff; /* White text for contrast */
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8); /* Dark shadow for readability */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        .hp-overlay-text .heart-icon {
+            color: var(--neon-pink); /* Red heart */
+            font-size: 0.7em; /* Adjusted heart size */
         }
 
         /* Character Card Visual */
@@ -410,22 +443,26 @@
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
-            padding: 25px;
+            padding: 10px 15px; /* Adjusted padding */
             text-align: center;
             font-family: 'Orbitron', monospace;
-            font-size: 1.3rem;
+            font-size: 0.8rem; /* Smaller font size */
             font-weight: 600;
             color: var(--neon-orange);
-            min-height: 80px;
+            min-height: 45px; /* Adjusted height */
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px auto;
-            max-width: 80%;
-            position: relative;
+            position: absolute; /* Changed to absolute for precise positioning */
+            bottom: 10px; /* Positioned from bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Centered horizontally */
+            width: 90%; /* Adjusted width */
+            max-width: 600px; /* Max width */
             overflow: hidden;
             text-shadow: 0 0 10px rgba(255, 128, 0, 0.8);
             border: 1px solid var(--neon-orange);
+            z-index: 5; /* Ensure it's above other elements if needed */
         }
 
         .game-messages::before {
@@ -450,13 +487,15 @@
 
         /* Game Buttons Sidebar */
         .game-buttons-sidebar {
-            display: flex; /* Changed to flex */
-            flex-direction: row; /* Changed to row for horizontal layout */
+            display: flex;
+            flex-direction: row;
             gap: 20px;
             padding: 20px;
             min-width: 180px;
             align-items: center;
-            justify-content: center; /* Centered buttons */
+            justify-content: center;
+            margin-top: 25px; /* Adjusted margin-top to create more space */
+            margin-bottom: 80px; /* Adjusted margin-bottom to push message bar up */
         }
 
         /* General Game Button Style */
@@ -473,7 +512,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            width: auto; /* Changed to auto to fit content */
+            width: auto;
             box-shadow: 0 5px 15px rgba(255, 0, 128, 0.3);
         }
 
@@ -627,6 +666,11 @@
             gap: 20px;
             position: relative;
             backdrop-filter: blur(10px);
+            /* Ensure content respects safe areas within the container */
+            padding-top: calc(30px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(30px + env(safe-area-inset-left, 0px));
+            padding-right: calc(30px + env(safe-area-inset-right, 0px));
         }
 
         .character-selection-screen h1 {
@@ -768,9 +812,9 @@
         }
 
         #intro-player-card {
-            width: 300px;
-            height: 400px;
-            transform: scale(0.8);
+            width: 250px; /* Reduced width */
+            height: 350px; /* Reduced height */
+            transform: scale(0.9); /* Slightly smaller scale */
             opacity: 0;
             transition: transform 1s ease-out, opacity 1s ease-out;
             box-shadow: 0 0 50px rgba(128, 0, 255, 0.8), inset 0 0 30px rgba(128, 0, 255, 0.4);
@@ -783,14 +827,13 @@
 
         #intro-player-name {
             font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
+            font-size: 2rem; /* Reduced font size */
             font-weight: 700;
             color: var(--neon-pink);
             text-shadow: 0 0 20px rgba(255, 0, 128, 0.9);
-            margin-top: 20px;
+            margin-top: 15px; /* Adjusted margin */
             opacity: 0;
             transition: opacity 0.8s ease-out 0.5s;
-            /* New style added */
             text-align: center;
         }
 
@@ -806,6 +849,7 @@
             max-width: 600px; /* Max width */
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 15px rgba(128, 0, 255, 0.3), inset 0 0 10px rgba(128, 0, 255, 0.1);
+            margin-top: 0; /* Removed explicit margin-top as container handles it */
         }
 
         .player-bar-avatar {
@@ -925,6 +969,11 @@
                 width: 98%;
                 max-width: none;
             }
+            /* Adjusted margin-top for mobile game container */
+            .game-container {
+                margin-top: 70px; /* Adjusted to give more top space */
+                margin-bottom: 10px;
+            }
 
             .game-title, .character-selection-screen h1 {
                 font-size: 1.5rem;
@@ -975,10 +1024,10 @@
             }
 
             .game-messages {
-                font-size: 0.9rem;
-                padding: 15px;
-                max-width: 98%;
-                min-height: 60px;
+                font-size: 0.8rem; /* Adjusted font size */
+                padding: 8px 12px; /* Adjusted padding */
+                min-height: 40px; /* Adjusted height */
+                bottom: 10px; /* Adjusted bottom */
             }
 
             .game-buttons-sidebar {
@@ -987,6 +1036,8 @@
                 flex-wrap: wrap; /* Allow wrapping on smaller screens */
                 justify-content: center; /* Center items when wrapped */
                 gap: 10px; /* Adjusted gap for mobile buttons */
+                margin-top: 15px; /* Adjusted margin-top */
+                margin-bottom: 60px; /* Adjusted margin-bottom */
             }
 
             .game-button, .start-game-button-selection {
@@ -1005,17 +1056,17 @@
             }
 
             #intro-player-card {
-                width: 250px;
-                height: 350px;
+                width: 200px; /* Adjusted for mobile */
+                height: 280px; /* Adjusted for mobile */
             }
 
             #intro-player-name {
-                font-size: 1.8rem;
+                font-size: 1.5rem; /* Adjusted for mobile */
             }
 
             /* Mobile vertical top spacing adjustment */
             .character-selection-screen {
-                margin-top: 50px; /* Top spacing added */
+                margin-top: 50px; /* Adjusted for mobile */
             }
 
             /* Player bar mobile compatibility */
@@ -1128,6 +1179,9 @@
                     <div class="player-bar-name" id="player1-name-bar">SEN</div>
                     <div class="player-bar-hp-container">
                         <div id="player1-hp-bar-small" class="player-bar-hp" style="width: 100%;"></div>
+                        <div class="hp-overlay-text">
+                            <span class="heart-icon">❤️</span> <span id="player1-hp-bar-text">100</span> HP
+                        </div>
                     </div>
                     <!-- Player stats added here -->
                     <div class="player-bar-stats">
@@ -1137,7 +1191,7 @@
                         <div class="player-bar-stat-item">CRIT: <span id="player1-crit-bar" class="player-bar-stat-value">?%</span></div>
                     </div>
                 </div>
-                <span id="player1-hp-bar-text" class="player-bar-hp-text">100 HP</span>
+                <!-- Removed old HP text span -->
                 <!-- Item icons container for player bar -->
                 <div class="player-bar-items" id="player1-items-bar">
                     <!-- Item icons will be added here dynamically by JavaScript -->
@@ -1152,9 +1206,12 @@
                 <div class="player-area" id="player2-area">
                     <div class="player-info-top">
                         <h2 id="player2-name-display">RAKİP</h2>
-                        <p class="text-lg font-bold mb-2"><span id="player2-hp" style="color: var(--neon-green); text-shadow: 0 0 8px rgba(0, 255, 65, 0.7);">100</span> HP</p>
+                        <!-- Removed old HP text p tag -->
                         <div class="hp-bar-container">
                             <div id="player2-hp-bar" class="hp-bar" style="width: 100%;"></div>
+                            <div class="hp-overlay-text">
+                                <span class="heart-icon">❤️</span> <span id="player2-hp">100</span> HP
+                            </div>
                         </div>
                     </div>
                     <div class="character-card-visual" id="player2-character-card-visual"></div>
@@ -1203,7 +1260,7 @@
         2.  **HP Update:** When Player 1's HP changes, update both the `width` style of the `player1-hp-bar-small` element and the text content of the `player1-hp-bar-text` element.
             Example:
             `document.getElementById('player1-hp-bar-small').style.width = newHP + '%';`
-            `document.getElementById('player1-hp-bar-text').textContent = newHP + ' HP';`
+            `document.getElementById('player1-hp-bar-text').textContent = newHP;` // Changed to only update number
             Additionally, add/remove the 'low-hp' class based on HP percentage:
             `document.getElementById('player1-hp-bar-small').classList.toggle('low-hp', newHP <= 30);`
 
