@@ -117,7 +117,7 @@
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
             padding: 20px;
-            margin: 80px auto 20px auto; /* Moved down by 80px by default */
+            margin: 50px auto 20px auto; /* Moved up by 30px from 80px */
             max-width: 1200px;
             position: relative;
             backdrop-filter: blur(10px);
@@ -207,7 +207,7 @@
             background: none; /* Removed background */
             padding: 0; /* Removed padding */
             max-width: 400px; /* Adjusted max-width for opponent card */
-            margin-top: -60px; /* Moved opponent card up */
+            margin-top: -90px; /* Moved opponent card up by another 30px from -60px */
         }
 
         .player-area::before {
@@ -323,7 +323,7 @@
 
         .hp-overlay-text .heart-icon {
             color: var(--neon-pink); /* Red heart */
-            font-size: 0.9em; /* Smaller heart size */
+            font-size: 0.6em; /* Smaller heart size */
         }
 
         /* Character Card Visual */
@@ -443,13 +443,13 @@
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
-            padding: 10px 15px; /* Reduced padding */
+            padding: 8px 12px; /* Reduced padding */
             text-align: center;
             font-family: 'Orbitron', monospace;
-            font-size: 0.9rem; /* Smaller font size */
+            font-size: 0.7rem; /* Smaller font size */
             font-weight: 600;
             color: var(--neon-orange);
-            min-height: 40px; /* Reduced height */
+            min-height: 35px; /* Reduced height */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -494,8 +494,8 @@
             min-width: 180px;
             align-items: center;
             justify-content: center;
-            margin-top: 20px; /* Moved down to create space from opponent card */
-            margin-bottom: 80px; /* Added margin-bottom to push message bar up */
+            margin-top: 5px; /* Moved up to create space from opponent card */
+            margin-bottom: 80px; /* Adjusted margin-bottom to push message bar up */
         }
 
         /* General Game Button Style */
@@ -656,7 +656,7 @@
             border-radius: 20px;
             box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(0, 255, 255, 0.1);
             padding: 30px;
-            margin: 20px auto;
+            margin: -10px auto 20px auto; /* Moved up by 30px from 20px */
             max-width: 1000px;
             width: 90%;
             text-align: center;
@@ -972,7 +972,7 @@
             }
             /* Adjusted margin-top for mobile game container */
             .game-container {
-                margin-top: 100px; /* Increased top margin for mobile */
+                margin-top: 70px; /* Increased top margin for mobile by 20px from 50px */
                 margin-bottom: 10px;
             }
 
@@ -1025,10 +1025,10 @@
             }
 
             .game-messages {
-                font-size: 0.9rem;
-                padding: 15px;
-                max-width: 98%;
-                min-height: 60px;
+                font-size: 0.7rem; /* Smaller font size */
+                padding: 10px 15px; /* Adjusted padding */
+                min-height: 40px; /* Adjusted height */
+                bottom: 10px; /* Adjusted bottom */
             }
 
             .game-buttons-sidebar {
@@ -1037,6 +1037,8 @@
                 flex-wrap: wrap; /* Allow wrapping on smaller screens */
                 justify-content: center; /* Center items when wrapped */
                 gap: 10px; /* Adjusted gap for mobile buttons */
+                margin-top: 5px; /* Adjusted margin-top */
+                margin-bottom: 60px; /* Adjusted margin-bottom */
             }
 
             .game-button, .start-game-button-selection {
@@ -1065,7 +1067,7 @@
 
             /* Mobile vertical top spacing adjustment */
             .character-selection-screen {
-                margin-top: 50px; /* Top spacing added */
+                margin-top: 20px; /* Moved up by 30px from 50px */
             }
 
             /* Player bar mobile compatibility */
