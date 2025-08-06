@@ -38,7 +38,7 @@
             justify-content: center;
             align-items: center;
             /* Telegram Web App Safe Area Adjustments */
-            padding-top: env(safe-area-inset-top, 20px); /* Increased default padding for top */
+            padding-top: env(safe-area-inset-top, 20px);
             padding-bottom: env(safe-area-inset-bottom, 0px);
             padding-left: env(safe-area-inset-left, 0px);
             padding-right: env(safe-area-inset-right, 0px);
@@ -430,7 +430,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px auto;
+            margin: 5px auto; /* Adjusted margin-top to move it closer to buttons */
             max-width: 80%;
             position: relative;
             overflow: hidden;
@@ -460,13 +460,14 @@
 
         /* Game Buttons Sidebar */
         .game-buttons-sidebar {
-            display: flex; /* Changed to flex */
-            flex-direction: row; /* Changed to row for horizontal layout */
+            display: flex;
+            flex-direction: row;
             gap: 20px;
             padding: 20px;
             min-width: 180px;
             align-items: center;
-            justify-content: center; /* Centered buttons */
+            justify-content: center;
+            margin-top: -10px; /* Adjusted margin-top to move it closer to opponent card */
         }
 
         /* General Game Button Style */
@@ -483,7 +484,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            width: auto; /* Changed to auto to fit content */
+            width: auto;
             box-shadow: 0 5px 15px rgba(255, 0, 128, 0.3);
         }
 
@@ -821,6 +822,7 @@
             max-width: 600px; /* Max width */
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 15px rgba(128, 0, 255, 0.3), inset 0 0 10px rgba(128, 0, 255, 0.1);
+            margin-top: 100px; /* Moved down by 100px */
         }
 
         .player-bar-avatar {
