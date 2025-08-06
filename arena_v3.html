@@ -117,7 +117,7 @@
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
             padding: 20px;
-            margin: 20px auto;
+            margin: 80px auto 20px auto; /* Moved down by 80px by default */
             max-width: 1200px;
             position: relative;
             backdrop-filter: blur(10px);
@@ -430,7 +430,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 5px auto; /* Adjusted margin-top to move it closer to buttons */
+            margin: -20px auto 20px auto; /* Moved up and added bottom margin */
             max-width: 80%;
             position: relative;
             overflow: hidden;
@@ -467,7 +467,7 @@
             min-width: 180px;
             align-items: center;
             justify-content: center;
-            margin-top: -10px; /* Adjusted margin-top to move it closer to opponent card */
+            margin-top: -40px; /* Moved up more */
         }
 
         /* General Game Button Style */
@@ -822,7 +822,7 @@
             max-width: 600px; /* Max width */
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 15px rgba(128, 0, 255, 0.3), inset 0 0 10px rgba(128, 0, 255, 0.1);
-            margin-top: 100px; /* Moved down by 100px */
+            margin-top: 0; /* Removed explicit margin-top as container handles it */
         }
 
         .player-bar-avatar {
@@ -941,6 +941,11 @@
                 padding: 10px;
                 width: 98%;
                 max-width: none;
+            }
+            /* Adjusted margin-top for mobile game container */
+            .game-container {
+                margin-top: 50px; /* Increased top margin for mobile */
+                margin-bottom: 10px;
             }
 
             .game-title, .character-selection-screen h1 {
