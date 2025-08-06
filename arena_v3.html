@@ -202,8 +202,8 @@
         }
 
         #player2-area {
-            border: none; /* Removed border */
-            box-shadow: none; /* Removed box shadow */
+            border: 1px solid rgba(0, 255, 255, 0.5); /* Added subtle border */
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.2); /* Added subtle shadow */
             background: none; /* Removed background */
             padding: 0; /* Removed padding */
             max-width: 400px; /* Adjusted max-width for opponent card */
@@ -324,7 +324,7 @@
 
         .hp-overlay-text .heart-icon {
             color: var(--neon-pink); /* Red heart */
-            font-size: 0.5em; /* Even smaller heart size */
+            font-size: 0.4em; /* Even smaller heart size */
         }
 
         /* Character Card Visual */
@@ -455,7 +455,7 @@
             align-items: center;
             justify-content: center;
             position: absolute; /* Changed to absolute for precise positioning */
-            bottom: 20px; /* Moved up to be visible and closer to buttons */
+            bottom: 60px; /* Moved up to be visible and closer to buttons */
             left: 50%;
             transform: translateX(-50%); /* Centered horizontally */
             width: 90%; /* Adjusted width */
@@ -495,7 +495,7 @@
             min-width: 180px;
             align-items: center;
             justify-content: center;
-            margin-top: 15px; /* Adjusted margin-top to be closer to opponent info */
+            margin-top: 0px; /* Adjusted margin-top to be closer to opponent info */
             margin-bottom: 0px; /* Removed margin-bottom as message bar is now below */
             width: 100%; /* Make buttons span full width of parent */
         }
@@ -1220,13 +1220,13 @@
                     <div class="character-info-bottom">
                         <div class="character-name" id="player2-character-name"></div>
                         <div class="character-stats" id="player2-character-stats"></div>
-                    </div>
-                    <!-- Game Buttons moved inside player2-area -->
-                    <div class="game-buttons-sidebar">
-                        <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLAT</button>
-                        <button id="attack-button" class="game-button hidden">SALDIRI</button>
-                        <button id="buff-button" class="game-button hidden">GÜÇLEN</button>
-                        <button id="restart-button" class="game-button hidden">YENİDEN</button>
+                        <!-- Game Buttons moved inside player2-area -->
+                        <div class="game-buttons-sidebar">
+                            <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLATI</button>
+                            <button id="attack-button" class="game-button hidden">SALDIRI</button>
+                            <button id="buff-button" class="game-button hidden">GÜÇLEN</button>
+                            <button id="restart-button" class="game-button hidden">YENİDEN</button>
+                        </div>
                     </div>
                 </div>
                 <!-- Player 1 (You) Area - This section is hidden -->
