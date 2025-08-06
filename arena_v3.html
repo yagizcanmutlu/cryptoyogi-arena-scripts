@@ -455,7 +455,7 @@
             align-items: center;
             justify-content: center;
             position: absolute; /* Changed to absolute for precise positioning */
-            bottom: 100px; /* Moved up to be visible and closer to buttons */
+            bottom: 20px; /* Moved up to be visible and closer to buttons */
             left: 50%;
             transform: translateX(-50%); /* Centered horizontally */
             width: 90%; /* Adjusted width */
@@ -1251,6 +1251,20 @@
     </div>
     <!-- Link your JavaScript file here -->
     <script src="arena_v3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script>
+        // Tone.js ses efekti için
+        const synth = new Tone.Synth().toDestination();
+
+        // Güçlen butonuna olay dinleyicisi ekle
+        const buffButton = document.getElementById('buff-button');
+        if (buffButton) {
+            buffButton.addEventListener('click', () => {
+                // Basit bir synth sesi çal
+                synth.triggerAttackRelease("C4", "8n");
+            });
+        }
+    </script>
     <!--
         IMPORTANT NOTE:
         The HTML changes above have moved Player 1's (your) information to the top bar.
