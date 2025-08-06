@@ -986,10 +986,11 @@
                 flex-direction: row; /* Keep as row for mobile */
                 flex-wrap: wrap; /* Allow wrapping on smaller screens */
                 justify-content: center; /* Center items when wrapped */
+                gap: 10px; /* Adjusted gap for mobile buttons */
             }
 
             .game-button, .start-game-button-selection {
-                width: 48%; /* Adjust width for two buttons side-by-side on mobile */
+                width: calc(50% - 10px); /* Adjusted width for two buttons side-by-side on mobile, accounting for gap */
                 padding: 10px 15px;
                 font-size: 0.9rem;
             }
