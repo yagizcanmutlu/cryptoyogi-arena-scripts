@@ -117,7 +117,7 @@
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
             padding: 20px;
-            margin: 80px auto 20px auto; /* Reverted to 80px */
+            margin: 80px auto 20px auto;
             max-width: 1200px;
             position: relative;
             backdrop-filter: blur(10px);
@@ -138,7 +138,7 @@
         /* Game Title */
         .game-title {
             font-family: 'Orbitron', monospace;
-            font-size: 2.5rem; /* Reverted to 2.5rem */
+            font-size: 2.5rem;
             font-weight: 900;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
             -webkit-background-clip: text;
@@ -164,7 +164,7 @@
             flex-direction: column; /* Vertical layout */
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Reverted to 20px */
+            gap: 25px; /* Increased gap */
             width: 100%;
             margin-bottom: 30px;
         }
@@ -173,7 +173,7 @@
             display: flex;
             justify-content: center; /* Centered */
             align-items: flex-start;
-            gap: 30px; /* Reverted to 30px */
+            gap: 35px; /* Increased gap between player areas */
             flex-grow: 1;
             width: 100%; /* Full width */
             max-width: 800px; /* Max width maintained */
@@ -203,11 +203,12 @@
 
         #player2-area {
             border: none; /* Removed border */
-            box-shadow: none; /* Removed box shadow */
-            background: none; /* Removed background */
-            padding: 0; /* Removed padding */
+            box-shadow: none; /* Removed box-shadow */
+            background: rgba(26, 26, 26, 0.2); /* Slightly transparent background */
+            padding: 15px; /* Added padding for content inside */
             max-width: 400px; /* Adjusted max-width for opponent card */
-            margin-top: -90px; /* Reverted to -90px */
+            margin-top: 0px; /* Adjusted margin-top for opponent card */
+            gap: 20px; /* Added gap for elements inside player2-area */
         }
 
         .player-area::before {
@@ -237,6 +238,7 @@
                 transform: scale(1);
             }
             100% {
+                box-shadow: 0 0 50px rgba(255, 0, 128, 1), inset 0 0 50px rgba(255, 0, 128, 0.4);
                 transform: scale(1.02);
             }
         }
@@ -322,7 +324,7 @@
 
         .hp-overlay-text .heart-icon {
             color: var(--neon-pink); /* Red heart */
-            font-size: 0.9em; /* Reverted to 0.9em */
+            font-size: 0.35em; /* Even smaller heart size */
         }
 
         /* Character Card Visual */
@@ -442,19 +444,22 @@
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
-            padding: 25px; /* Reverted to 25px */
+            padding: 10px 15px; /* Adjusted padding */
             text-align: center;
             font-family: 'Orbitron', monospace;
-            font-size: 1.3rem; /* Reverted to 1.3rem */
+            font-size: 0.8rem; /* Smaller font size */
             font-weight: 600;
             color: var(--neon-orange);
-            min-height: 80px; /* Reverted to 80px */
+            min-height: 45px; /* Adjusted height */
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: -40px auto 20px auto; /* Reverted to -40px auto 20px auto */
-            max-width: 80%;
-            position: relative;
+            position: absolute; /* Changed to absolute for precise positioning */
+            bottom: 20px; /* Moved up to be visible and closer to buttons */
+            left: 50%;
+            transform: translateX(-50%); /* Centered horizontally */
+            width: 90%; /* Adjusted width */
+            max-width: 600px; /* Max width */
             overflow: hidden;
             text-shadow: 0 0 10px rgba(255, 128, 0, 0.8);
             border: 1px solid var(--neon-orange);
@@ -486,12 +491,13 @@
             display: flex;
             flex-direction: row;
             gap: 20px;
-            padding: 20px;
+            padding: 15px; /* Adjusted padding */
             min-width: 180px;
             align-items: center;
             justify-content: center;
-            margin-top: -60px; /* Reverted to -60px */
-            margin-bottom: 80px; /* Reverted to 80px */
+            margin-top: 15px; /* Adjusted margin-top to be closer to opponent info */
+            margin-bottom: 0px; /* Removed margin-bottom as message bar is now below */
+            width: 100%; /* Make buttons span full width of parent */
         }
 
         /* General Game Button Style */
@@ -652,7 +658,7 @@
             border-radius: 20px;
             box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(0, 255, 255, 0.1);
             padding: 30px;
-            margin: 20px auto; /* Reverted to 20px */
+            margin: 20px auto;
             max-width: 1000px;
             width: 90%;
             text-align: center;
@@ -808,9 +814,9 @@
         }
 
         #intro-player-card {
-            width: 300px;
-            height: 400px;
-            transform: scale(0.8);
+            width: 250px; /* Reduced width */
+            height: 350px; /* Reduced height */
+            transform: scale(0.9); /* Slightly smaller scale */
             opacity: 0;
             transition: transform 1s ease-out, opacity 1s ease-out;
             box-shadow: 0 0 50px rgba(128, 0, 255, 0.8), inset 0 0 30px rgba(128, 0, 255, 0.4);
@@ -823,14 +829,13 @@
 
         #intro-player-name {
             font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
+            font-size: 2rem; /* Reduced font size */
             font-weight: 700;
             color: var(--neon-pink);
             text-shadow: 0 0 20px rgba(255, 0, 128, 0.9);
-            margin-top: 20px;
+            margin-top: 15px; /* Adjusted margin */
             opacity: 0;
             transition: opacity 0.8s ease-out 0.5s;
-            /* New style added */
             text-align: center;
         }
 
@@ -968,7 +973,7 @@
             }
             /* Adjusted margin-top for mobile game container */
             .game-container {
-                margin-top: 100px; /* Reverted to 100px */
+                margin-top: 70px; /* Adjusted to give more top space */
                 margin-bottom: 10px;
             }
 
@@ -1021,11 +1026,10 @@
             }
 
             .game-messages {
-                font-size: 0.9rem; /* Reverted to 0.9rem */
-                padding: 15px; /* Reverted to 15px */
-                max-width: 98%;
-                min-height: 60px; /* Reverted to 60px */
-                bottom: 10px; /* Reverted to 10px */
+                font-size: 0.8rem; /* Adjusted font size */
+                padding: 8px 12px; /* Adjusted padding */
+                min-height: 40px; /* Adjusted height */
+                bottom: 10px; /* Adjusted bottom */
             }
 
             .game-buttons-sidebar {
@@ -1034,8 +1038,8 @@
                 flex-wrap: wrap; /* Allow wrapping on smaller screens */
                 justify-content: center; /* Center items when wrapped */
                 gap: 10px; /* Adjusted gap for mobile buttons */
-                margin-top: 5px; /* Reverted to 5px */
-                margin-bottom: 60px; /* Reverted to 60px */
+                margin-top: 15px; /* Adjusted margin-top */
+                margin-bottom: 60px; /* Adjusted margin-bottom */
             }
 
             .game-button, .start-game-button-selection {
@@ -1054,17 +1058,17 @@
             }
 
             #intro-player-card {
-                width: 250px;
-                height: 350px;
+                width: 200px; /* Adjusted for mobile */
+                height: 280px; /* Adjusted for mobile */
             }
 
             #intro-player-name {
-                font-size: 1.8rem;
+                font-size: 1.5rem; /* Adjusted for mobile */
             }
 
             /* Mobile vertical top spacing adjustment */
             .character-selection-screen {
-                margin-top: 50px; /* Reverted to 50px */
+                margin-top: 50px; /* Adjusted for mobile */
             }
 
             /* Player bar mobile compatibility */
@@ -1178,7 +1182,7 @@
                     <div class="player-bar-hp-container">
                         <div id="player1-hp-bar-small" class="player-bar-hp" style="width: 100%;"></div>
                         <div class="hp-overlay-text">
-                            <span class="heart-icon">❤️</span> <span id="player1-hp-bar-text">100</span> HP
+                            <span class="heart-icon">❤️</span> <span id="player1-hp-bar-text">100</span>
                         </div>
                     </div>
                     <!-- Player stats added here -->
@@ -1208,7 +1212,7 @@
                         <div class="hp-bar-container">
                             <div id="player2-hp-bar" class="hp-bar" style="width: 100%;"></div>
                             <div class="hp-overlay-text">
-                                <span class="heart-icon">❤️</span> <span id="player2-hp">100</span> HP
+                                <span class="heart-icon">❤️</span> <span id="player2-hp">100</span>
                             </div>
                         </div>
                     </div>
@@ -1216,6 +1220,13 @@
                     <div class="character-info-bottom">
                         <div class="character-name" id="player2-character-name"></div>
                         <div class="character-stats" id="player2-character-stats"></div>
+                        <!-- Game Buttons moved inside player2-area -->
+                        <div class="game-buttons-sidebar">
+                            <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLATI</button>
+                            <button id="attack-button" class="game-button hidden">SALDIRI</button>
+                            <button id="buff-button" class="game-button hidden">GÜÇLEN</button>
+                            <button id="restart-button" class="game-button hidden">YENİDEN</button>
+                        </div>
                     </div>
                 </div>
                 <!-- Player 1 (You) Area - This section is hidden -->
@@ -1234,19 +1245,28 @@
                     </div>
                 </div>
             </div>
-            <!-- Game Buttons -->
-            <div class="game-buttons-sidebar">
-                <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLAT</button>
-                <button id="attack-button" class="game-button hidden">SALDIRI</button>
-                <button id="buff-button" class="game-button hidden">GÜÇLEN</button>
-                <button id="restart-button" class="game-button hidden">YENİDEN</button>
-            </div>
         </div>
         <!-- Game Messages Area -->
         <div class="game-messages" id="game-messages">SAVAŞ BAŞLADI! SIRA SENDE.</div>
     </div>
     <!-- Link your JavaScript file here -->
     <script src="arena_v3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <script>
+        // Tone.js ses efekti için
+        const synth = new Tone.Synth().toDestination();
+
+        // Güçlen butonuna olay dinleyicisi ekle
+        const buffButton = document.getElementById('buff-button');
+        if (buffButton) {
+            buffButton.addEventListener('click', async () => {
+                // AudioContext'i başlat
+                await Tone.start();
+                // Basit bir synth sesi çal
+                synth.triggerAttackRelease("C4", "8n");
+            });
+        }
+    </script>
     <!--
         IMPORTANT NOTE:
         The HTML changes above have moved Player 1's (your) information to the top bar.
@@ -1261,6 +1281,7 @@
             `document.getElementById('player1-hp-bar-text').textContent = newHP;` // Changed to only update number
             Additionally, add/remove the 'low-hp' class based on HP percentage:
             `document.getElementById('player1-hp-bar-small').classList.toggle('low-hp', newHP <= 30);`
+            **IMPORTANT:** If you want "100 HP" to appear, ensure your JavaScript sets `textContent` to `newHP + ' HP'`.
 
         3.  **Name Update:** When Player 1's name changes, update the text content of the `player1-name-bar` element.
             Example: `document.getElementById('player1-name-bar').textContent = characterName;`
