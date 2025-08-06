@@ -207,6 +207,7 @@
             background: none; /* Removed background */
             padding: 0; /* Removed padding */
             max-width: 400px; /* Adjusted max-width for opponent card */
+            margin-top: -60px; /* Moved opponent card up */
         }
 
         .player-area::before {
@@ -322,7 +323,7 @@
 
         .hp-overlay-text .heart-icon {
             color: var(--neon-pink); /* Red heart */
-            font-size: 1.2em; /* Slightly larger heart */
+            font-size: 0.9em; /* Smaller heart size */
         }
 
         /* Character Card Visual */
@@ -442,22 +443,26 @@
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
-            padding: 25px;
+            padding: 10px 15px; /* Reduced padding */
             text-align: center;
             font-family: 'Orbitron', monospace;
-            font-size: 1.3rem;
+            font-size: 0.9rem; /* Smaller font size */
             font-weight: 600;
             color: var(--neon-orange);
-            min-height: 80px;
+            min-height: 40px; /* Reduced height */
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: -40px auto 20px auto; /* Moved up more and added bottom margin */
-            max-width: 80%;
-            position: relative;
+            position: absolute; /* Changed to absolute for precise positioning */
+            bottom: 10px; /* Positioned from bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Centered horizontally */
+            width: 90%; /* Adjusted width */
+            max-width: 600px; /* Max width */
             overflow: hidden;
             text-shadow: 0 0 10px rgba(255, 128, 0, 0.8);
             border: 1px solid var(--neon-orange);
+            z-index: 5; /* Ensure it's above other elements if needed */
         }
 
         .game-messages::before {
@@ -489,7 +494,8 @@
             min-width: 180px;
             align-items: center;
             justify-content: center;
-            margin-top: -60px; /* Moved up even more */
+            margin-top: 20px; /* Moved down to create space from opponent card */
+            margin-bottom: 80px; /* Added margin-bottom to push message bar up */
         }
 
         /* General Game Button Style */
