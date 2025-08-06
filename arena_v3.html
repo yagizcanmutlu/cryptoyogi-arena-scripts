@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>NFT Karakter Savaşı - Cyberpunk Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -37,6 +37,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Telegram Web App Safe Area Adjustments */
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: env(safe-area-inset-right, 0px);
         }
 
         /* Cyber Background Effect */
@@ -119,6 +124,11 @@
             display: none; /* Hidden initially */
             flex-direction: column;
             align-items: center;
+            /* Ensure content respects safe areas within the container */
+            padding-top: calc(20px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(20px + env(safe-area-inset-left, 0px));
+            padding-right: calc(20px + env(safe-area-inset-right, 0px));
         }
 
         .game-container::before {
@@ -627,6 +637,11 @@
             gap: 20px;
             position: relative;
             backdrop-filter: blur(10px);
+            /* Ensure content respects safe areas within the container */
+            padding-top: calc(30px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+            padding-left: calc(30px + env(safe-area-inset-left, 0px));
+            padding-right: calc(30px + env(safe-area-inset-right, 0px));
         }
 
         .character-selection-screen h1 {
