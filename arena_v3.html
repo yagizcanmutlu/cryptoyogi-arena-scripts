@@ -226,35 +226,20 @@
             left: 100%;
         }
 
-        /* Player Turn Glow */
-        .player-turn-glow-player {
-            border-color: var(--neon-green) !important;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.8), inset 0 0 15px rgba(0, 255, 65, 0.4);
-            animation: player-glow-pulse 1.5s ease-in-out infinite alternate;
+        .current-player-glow {
+            border-color: var(--neon-pink) !important;
+            box-shadow: 0 0 30px rgba(255, 0, 128, 0.8), inset 0 0 30px rgba(255, 0, 128, 0.2);
+            animation: current-player-pulse 1.5s ease-in-out infinite alternate;
         }
 
-        @keyframes player-glow-pulse {
+        @keyframes current-player-pulse {
             0% {
-                box-shadow: 0 0 20px rgba(0, 255, 65, 0.8), inset 0 0 15px rgba(0, 255, 65, 0.4);
+                box-shadow: 0 0 30px rgba(255, 0, 128, 0.8), inset 0 0 30px rgba(255, 0, 128, 0.2);
+                transform: scale(1);
             }
             100% {
-                box-shadow: 0 0 35px rgba(0, 255, 65, 1), inset 0 0 25px rgba(0, 255, 65, 0.6);
-            }
-        }
-
-        /* Opponent Turn Glow */
-        .player-turn-glow-opponent {
-            border-color: var(--neon-pink) !important; /* Reddish glow for opponent */
-            box-shadow: 0 0 20px rgba(255, 0, 128, 0.8), inset 0 0 15px rgba(255, 0, 128, 0.4);
-            animation: opponent-glow-pulse 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes opponent-glow-pulse {
-            0% {
-                box-shadow: 0 0 20px rgba(255, 0, 128, 0.8), inset 0 0 15px rgba(255, 0, 128, 0.4);
-            }
-            100% {
-                box-shadow: 0 0 35px rgba(255, 0, 128, 1), inset 0 0 25px rgba(255, 0, 128, 0.6);
+                box-shadow: 0 0 50px rgba(255, 0, 128, 1), inset 0 0 50px rgba(255, 0, 128, 0.4);
+                transform: scale(1.02);
             }
         }
 
@@ -459,26 +444,26 @@
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
-            padding: 10px 15px;
+            padding: 10px 15px; /* Adjusted padding */
             text-align: center;
             font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
+            font-size: 0.8rem; /* Smaller font size */
             font-weight: 600;
             color: var(--neon-orange);
-            min-height: 45px;
+            min-height: 45px; /* Adjusted height */
             display: flex;
             align-items: center;
             justify-content: center;
-            position: absolute;
-            bottom: 60px; /* Adjusted to be higher */
+            position: absolute; /* Changed to absolute for precise positioning */
+            bottom: 20px; /* Moved up to be visible and closer to buttons */
             left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 600px;
+            transform: translateX(-50%); /* Centered horizontally */
+            width: 90%; /* Adjusted width */
+            max-width: 600px; /* Max width */
             overflow: hidden;
             text-shadow: 0 0 10px rgba(255, 128, 0, 0.8);
             border: 1px solid var(--neon-orange);
-            z-index: 5;
+            z-index: 5; /* Ensure it's above other elements if needed */
         }
 
         .game-messages::before {
@@ -506,13 +491,13 @@
             display: flex;
             flex-direction: row;
             gap: 20px;
-            padding: 15px;
+            padding: 15px; /* Adjusted padding */
             min-width: 180px;
             align-items: center;
             justify-content: center;
             margin-top: 15px; /* Adjusted margin-top to be closer to opponent info */
-            margin-bottom: 0px;
-            width: 100%;
+            margin-bottom: 0px; /* Removed margin-bottom as message bar is now below */
+            width: 100%; /* Make buttons span full width of parent */
         }
 
         /* General Game Button Style */
@@ -1044,7 +1029,7 @@
                 font-size: 0.8rem; /* Adjusted font size */
                 padding: 8px 12px; /* Adjusted padding */
                 min-height: 40px; /* Adjusted height */
-                bottom: 30px; /* Adjusted bottom for mobile */
+                bottom: 10px; /* Adjusted bottom */
             }
 
             .game-buttons-sidebar {
@@ -1275,64 +1260,51 @@
         const buffButton = document.getElementById('buff-button');
         if (buffButton) {
             buffButton.addEventListener('click', async () => {
-                console.log("Buff button clicked, attempting to play sound.");
                 // AudioContext'i başlat
-                try {
-                    await Tone.start();
-                    synth.triggerAttackRelease("C4", "8n");
-                    console.log("Sound played successfully.");
-                } catch (error) {
-                    console.error("Error playing sound:", error);
-                }
+                await Tone.start();
+                // Basit bir synth sesi çal
+                synth.triggerAttackRelease("C4", "8n");
             });
         }
     </script>
     <!--
-        ÖNEMLİ NOT:
-        Yukarıdaki HTML değişiklikleri, Oyuncu 1'in (sizin) bilgilerini üst bara taşıdı.
-        Bu bilgilerin doğru şekilde görüntülenmesi ve güncellenmesi için "arena_v3.js" dosyanızda aşağıdaki değişiklikleri yapmanız gerekmektedir:
+        IMPORTANT NOTE:
+        The HTML changes above have moved Player 1's (your) information to the top bar.
+        For this information to be displayed and updated correctly, you need to make the following changes in your "arena_v3.js" file:
 
-        1.  **NFT Görseli:** Oyuncu 1'in NFT görselini yüklediğinizde, bu görseli `player1-avatar` öğesinin `src` özelliğine atayın.
-            Örnek: `document.getElementById('player1-avatar').src = characterNFTImageURL;`
+        1.  **NFT Image:** When you load Player 1's NFT image, assign this image to the `src` attribute of the `player1-avatar` element.
+            Example: `document.getElementById('player1-avatar').src = characterNFTImageURL;`
 
-        2.  **HP Güncellemesi:** Oyuncu 1'in HP'si değiştiğinde, hem `player1-hp-bar-small` öğesinin `width` stilini hem de `player1-hp-bar-text` öğesinin metin içeriğini güncelleyin.
-            Örnek:
+        2.  **HP Update:** When Player 1's HP changes, update both the `width` style of the `player1-hp-bar-small` element and the text content of the `player1-hp-bar-text` element.
+            Example:
             `document.getElementById('player1-hp-bar-small').style.width = newHP + '%';`
-            `document.getElementById('player1-hp-bar-text').textContent = newHP;`
-            Ek olarak, HP yüzdesine göre 'low-hp' sınıfını ekleyin/kaldırın:
+            `document.getElementById('player1-hp-bar-text').textContent = newHP;` // Changed to only update number
+            Additionally, add/remove the 'low-hp' class based on HP percentage:
             `document.getElementById('player1-hp-bar-small').classList.toggle('low-hp', newHP <= 30);`
+            **IMPORTANT:** If you want "100 HP" to appear, ensure your JavaScript sets `textContent` to `newHP + ' HP'`.
 
-        3.  **İsim Güncellemesi:** Oyuncu 1'in ismi değiştiğinde, `player1-name-bar` öğesinin metin içeriğini güncelleyin.
-            Örnek: `document.getElementById('player1-name-bar').textContent = characterName;`
+        3.  **Name Update:** When Player 1's name changes, update the text content of the `player1-name-bar` element.
+            Example: `document.getElementById('player1-name-bar').textContent = characterName;`
 
-        4.  **İstatistik Güncellemesi:** Oyuncu 1'in seviye, ATK, DEF ve CRIT istatistikleri değiştiğinde, ilgili `span` öğelerinin (`player1-level-bar`, `player1-atk-bar`, `player1-def-bar`, `player1-crit-bar`) metin içeriğini güncelleyin.
-            Örnek:
+        4.  **Stats Update:** When Player 1's level, ATK, DEF, and CRIT stats change, update the text content of the corresponding `span` elements (`player1-level-bar`, `player1-atk-bar`, `player1-def-bar`, `player1-crit-bar`).
+            Example:
             `document.getElementById('player1-level-bar').textContent = characterLevel;`
             `document.getElementById('player1-atk-bar').textContent = characterATK;`
             `document.getElementById('player1-def-bar').textContent = characterDEF;`
             `document.getElementById('player1-crit-bar').textContent = characterCRIT + '%';`
 
-        5.  **Eşya Simgeleri Güncellemesi:** Oyuncu 1 için eşya verileriniz varsa, `player1-items-bar` öğesine dinamik olarak eşya simgeleri ekleyebilirsiniz.
-            Örnek (updateUI veya özel bir fonksiyon içinde):
+        5.  **Item Icons Update:** If you have item data for player1, you can dynamically add item icons to the `player1-items-bar` element.
+            Example (inside updateUI or a dedicated function):
             `const player1ItemsBar = document.getElementById('player1-items-bar');`
-            `player1ItemsBar.innerHTML = ''; // Mevcut eşyaları temizle`
+            `player1ItemsBar.innerHTML = ''; // Clear existing items`
             `player1.items.forEach(item => {`
             `   const itemIconDiv = document.createElement('div');`
             `   itemIconDiv.classList.add('player-bar-item-icon');`
-            `   itemIconDiv.textContent = item.icon; // Eşya nesnesinin bir 'icon' özelliği olduğunu varsayarak (örn. '⚡', '🛡️')`
+            `   itemIconDiv.textContent = item.icon; // Assuming item object has an 'icon' property (e.g., '⚡', '🛡️')`
             `   player1ItemsBar.appendChild(itemIconDiv);`
             `});`
 
-        6.  **Sıra Göstergesi (Parlayan Çerçeve) Güncellemesi:**
-            Sıra oyuncuya geçtiğinde:
-            `document.getElementById('player1-bar').classList.add('player-turn-glow-player');`
-            `document.getElementById('player2-area').classList.remove('player-turn-glow-opponent');`
-
-            Sıra rakibe geçtiğinde:
-            `document.getElementById('player2-area').classList.add('player-turn-glow-opponent');`
-            `document.getElementById('player1-bar').classList.remove('player-turn-glow-player');`
-
-            Bu güncellemeler yapıldığında, Oyuncu 1'in bilgileri üst barda doğru şekilde görüntülenecek, savaş sırasındaki HP düşüşleri bu barda da yansıtılacak ve sıra göstergesi aktif olacaktır.
+        When these updates are made, Player 1's information will be displayed correctly in the top bar, and HP drops during battle will also be reflected on this bar.
     -->
 </body>
 </html>
