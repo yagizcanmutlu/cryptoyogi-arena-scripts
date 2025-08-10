@@ -472,7 +472,7 @@ function handleAttack() {
         }, 800);
     }
 
-    let damage = Math.max(0, attacker.effectiveAtk - defender.effectiveDef);
+    let damage = Math.max(1, attacker.effectiveAtk - defender.effectiveDef);
     let message = `${currentPlayer.name}'in ${attacker.name} saldırdı! `;
     if (Math.random() < attacker.criticalChance) {
         damage = Math.round(damage * attacker.criticalMultiplier);
