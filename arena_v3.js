@@ -472,15 +472,20 @@ function handleAttack() {
         }, 800);
     }
 
-    let damage = Math.max(1, attacker.effectiveAtk - defender.effectiveDef);
+    // Yeni hasar formülü
+    let crit = Math.random() < attacker.criticalChance;
+    let critMultiplier = crit ? attacker.criticalMultiplier : 1;
+    let baseDamage = attacker.effectiveAtk * critMultiplier;
+    let damage = Math.round(baseDamage * (100 / (100 + defender.effectiveDef)));
+    damage = Math.max(1, damage); // Minimum 1 hasar
+
     let message = `${currentPlayer.name}'in ${attacker.name} saldırdı! `;
-    if (Math.random() < attacker.criticalChance) {
-        damage = Math.round(damage * attacker.criticalMultiplier);
+    if (crit) {
         message += `KRİTİK VURUŞ! `;
     }
-    
+
     defender.currentHp -= damage;
-    
+
     message += `${defender.name}'e ${damage} hasar verdi.`;
     gameMessagesElement.textContent = message;
 
