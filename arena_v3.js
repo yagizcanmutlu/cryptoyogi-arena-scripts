@@ -18,44 +18,49 @@ const WEBHOOK_URL = "https://hook.eu2.make.com/5fqovqqnwl1ihdjnqsvywi6y325j7ma5"
 
 // Karakter sınıfı tanımı
 class Character {
-    constructor(id, name, atk, def, initialHp, imageUrl, level, critChance) {
+    constructor(id, name, atk, def, initialHp, imageUrl, level, critChance) { // Level ve critChance eklendi
         this.id = id;
         this.name = name;
         this.baseAtk = atk;
         this.baseDef = def;
         this.currentHp = initialHp;
-        this.maxHp = initialHp; // Maksimum can değeri eklendi
         this.imageUrl = imageUrl;
-        this.level = level || 1;
-        this.criticalChance = critChance || 0.2;
-        this.buffActive = false;
-        this.buffTurnsLeft = 0;
-        this.buffAmount = 15;
-        this.criticalMultiplier = 1.5;
-        this.items = [];
+        this.level = level || 1; // Varsayılan level 1
+        this.criticalChance = critChance || 0.2; // Varsayılan kritik vuruş şansı
+        this.buffActive = false; // Buff aktif mi
+        this.buffTurnsLeft = 0; // Buff kaç tur sürecek
+        this.buffAmount = 15; // Buff ile artan saldırı gücü
+        this.criticalMultiplier = 1.5; // Kritik vuruş çarpanı
+        this.items = []; // Karakterin itemları için boş bir dizi
     }
 
+    // Karakterin görsel HTML'ini döndürür
     toVisualHtml() {
         return `<img src="${this.imageUrl}" alt="${this.name} Image" class="rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/280x380/6c757d/FFFFFF?text=NFT+ERROR';">`;
     }
 
+    // Karakterin adını döndürür
     toNameHtml() {
         return this.name;
     }
 
+    // Etkili saldırı gücünü hesaplar (buff dahil)
     get effectiveAtk() {
         return this.baseAtk + (this.buffActive ? this.buffAmount : 0);
     }
 
+    // Etkili savunma gücünü döndürür
     get effectiveDef() {
         return this.baseDef;
     }
 
+    // Buff'ı uygular
     applyBuff() {
         this.buffActive = true;
-        this.buffTurnsLeft = 2;
+        this.buffTurnsLeft = 2; // 2 tur sürecek
     }
 
+    // Buff süresini azaltır
     decrementBuffTurn() {
         if (this.buffActive) {
             this.buffTurnsLeft--;
@@ -66,6 +71,7 @@ class Character {
         }
     }
 
+    // Karakterin istatistik HTML'ini döndürür (eski kart görünümü için)
     toStatsHtml(playerName, playerLevel) {
         let buffStatus = this.buffActive ? `<span class="character-stat-item text-yellow-300">🔥 BUFF: +${this.buffAmount} AP (${this.buffTurnsLeft} tur)</span>` : '';
         return `
@@ -80,13 +86,14 @@ class Character {
 
 // Oyuncu sınıfı tanımı
 class Player {
-    constructor(name, initialHp, level = 1, otherInfo = '', isAI = false, characterData, items = []) {
+    constructor(name, initialHp, level = 1, otherInfo = '', isAI = false, characterData, items = []) { // items parametresi eklendi
         this.name = name;
         this.level = level;
         this.otherInfo = otherInfo;
         this.isAI = isAI;
+        // Character sınıfına level ve critChance parametreleri eklendi
         this.character = new Character(characterData.id, characterData.name, characterData.atk, characterData.def, initialHp, characterData.imageUrl, characterData.level, characterData.critChance);
-        this.character.items = items;
+        this.character.items = items; // Karakterin itemlarını ata
     }
 }
 
@@ -99,7 +106,7 @@ let player1, player2, currentPlayer, gameActive = false,
     selectedPlayerNFT = null;
 let allFetchedNFTs = [];
 let opponentNFTs = [];
-let playerWalletAddress = null;
+let playerWalletAddress = null; // Cüzdan adresini postMessage ile alacağız
 
 // DOM elementleri
 const gameContainer = document.getElementById('game-container');
@@ -109,6 +116,7 @@ const characterGrid = document.getElementById('character-grid');
 const selectCharacterButton = document.getElementById('select-character-button');
 const loadingNFTsMessage = document.getElementById('loading-nfts');
 
+// Oyuncu 1 (Sen) Barı elementleri
 const player1Bar = document.getElementById('player1-bar');
 const player1Avatar = document.getElementById('player1-avatar');
 const player1NameBar = document.getElementById('player1-name-bar');
@@ -118,15 +126,17 @@ const player1LevelBar = document.getElementById('player1-level-bar');
 const player1AtkBar = document.getElementById('player1-atk-bar');
 const player1DefBar = document.getElementById('player1-def-bar');
 const player1CritBar = document.getElementById('player1-crit-bar');
-const player1ItemsBar = document.getElementById('player1-items-bar');
+const player1ItemsBar = document.getElementById('player1-items-bar'); // Yeni item barı elementi
 
+// Oyuncu 1 (Sen) Alanı - Bu kısım gizlendiği için güncellenmeyecek, sadece referans olarak duruyor
 const player1Area = document.getElementById('player1-area');
-const player1HpBar = document.getElementById('player1-hp-bar');
-const player1HpText = document.getElementById('player1-hp');
+const player1HpBar = document.getElementById('player1-hp-bar'); // Eski büyük can barı
+const player1HpText = document.getElementById('player1-hp'); // Eski büyük can text
 const player1CharacterCardVisualElement = document.getElementById('player1-character-card-visual');
 const player1CharacterNameElement = document.getElementById('player1-character-name');
 const player1CharacterStatsElement = document.getElementById('player1-character-stats');
 const player1NameDisplay = document.getElementById('player1-name-display');
+
 const player2Area = document.getElementById('player2-area');
 const player2HpBar = document.getElementById('player2-hp-bar');
 const player2HpText = document.getElementById('player2-hp');
@@ -134,46 +144,42 @@ const player2CharacterCardVisualElement = document.getElementById('player2-chara
 const player2CharacterNameElement = document.getElementById('player2-character-name');
 const player2CharacterStatsElement = document.getElementById('player2-character-stats');
 const player2NameDisplay = document.getElementById('player2-name-display');
+
 const gameMessagesElement = document.getElementById('game-messages');
 const startBattleButton = document.getElementById('start-battle-button');
 const restartButton = document.getElementById('restart-button');
 const attackButton = document.getElementById('attack-button');
 const buffButton = document.getElementById('buff-button');
+
 const battleIntroScreen = document.getElementById('battle-intro-screen');
 const introPlayerCard = document.getElementById('intro-player-card');
 const introPlayerName = document.getElementById('intro-player-name');
 const mainGameContent = document.querySelector('.main-game-content');
 
 // Airtable API bilgileri
-const AIRTABLE_API_KEY = 'patHY39bvGqiBVDCN.719c8ac3361113671055eec87d8fffd99849206756828555e8c156953';
-const AIRTABLE_BASE_ID = 'appYd2h4K7z0lF82K';
-const AIRTABLE_TABLE_ID = 'tblJ4W4S21TqgB4h0';
-const AIRTABLE_ENDPOINT = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`;
+const AIRTABLE_API_KEY = 'patNmkPQFkKD7rwMg.ad10006df9da05fea81089b46caab7f1629b474e88b8bf69d91269c58b50e211';
+const AIRTABLE_BASE_ID = 'appBuciupEMutB7Z0';
+const AIRTABLE_NFT_TABLE_NAME = 'nft_list';
+const AIRTABLE_USER_TABLE_NAME = 'user_list';
 
-<<<<<<< HEAD
-// NFT verilerini AirTable'dan çek
-async function fetchNFTsFromAirtable(minLevel = 1) {
-    loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...';
-=======
 // Airtable'dan NFT'leri çeken fonksiyon
-async function fetchNFTsFromAirtable() {
+// Bu fonksiyon artık tüm NFT'leri çeker, cüzdan filtresi burada uygulanmaz
+async function fetchNFTsFromAirtable() { // walletAddress parametresi kaldırıldı
     let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_NFT_TABLE_NAME}`;
->>>>>>> parent of 684a79f (Update arena_v3.js)
+    // console.log('Airtable API URL (constructed - tüm NFTler için):', url); // Debug: Oluşturulan Airtable URL'ini logla
     try {
-        const response = await fetch(AIRTABLE_ENDPOINT, {
+        const response = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${AIRTABLE_API_KEY}`
+                'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                'Content-Type': 'application/json'
             }
         });
         if (!response.ok) {
-            throw new Error(`Airtable API'dan veri çekme hatası: ${response.status}`);
+            const errorBody = await response.text();
+            throw new Error(`Airtable API hatası: Sunucudan yanıt alınamadı veya yetkilendirme sorunu (HTTP ${response.status}). Lütfen API anahtarınızın, Base ID'nizin ve tablo adınızın doğru olduğundan, ayrıca API anahtarınızın gerekli izinlere (read) sahip olduğundan ve Airtable'daki 'wallet' sütun adının doğru olduğundan emin olun.`);
         }
         const data = await response.json();
-<<<<<<< HEAD
-        allFetchedNFTs = data.records.filter(record => record.fields.Level >= minLevel);
-        renderCharacterSelection(allFetchedNFTs);
-        loadingNFTsMessage.textContent = '';
-=======
+        // console.log('Airtable API Raw Response (tüm NFTler):', data); // Debug: Airtable'dan gelen ham yanıtı logla
         if (!data.records || data.records.length === 0) {
             return [];
         }
@@ -186,8 +192,8 @@ async function fetchNFTsFromAirtable() {
                 def: record.fields.dp || 30,
                 imageUrl: imageUrl,
                 wallet: record.fields.wallet || null,
-                level: record.fields.level || 1,
-                critChance: record.fields.crit_chance || 0.2,
+                level: record.fields.level || 1, // Level bilgisini ekle
+                critChance: record.fields.crit_chance || 0.2, // Crit Chance bilgisini ekle
                 // Safely parse items, default to empty array if parsing fails or field is missing
                 items: (() => {
                     try {
@@ -199,20 +205,17 @@ async function fetchNFTsFromAirtable() {
                 })()
             };
         });
->>>>>>> parent of 684a79f (Update arena_v3.js)
     } catch (error) {
-        console.error('Veri çekme hatası:', error);
-        loadingNFTsMessage.textContent = 'NFT\'ler yüklenirken bir hata oluştu.';
+        gameMessagesElement.textContent = `NFT'ler yüklenirken bir sorun oluştu: ${error.message}. Lütfen konsolu kontrol edin ve Airtable ayarlarınızı doğrulayın.`;
+        console.error('fetchNFTsFromAirtable hatası:', error); // Hata detayını konsola yaz
+        return [];
     }
 }
 
-<<<<<<< HEAD
-// Karakter seçme ekranını oluştur
-function renderCharacterSelection(nfts) {
-=======
 // Cüzdan adresine göre kullanıcı adını çeken fonksiyon
 async function fetchUserNameByWallet(walletAddress) {
     if (!walletAddress) return null;
+    // Cüzdan adresini normalleştir
     const cleanWalletAddress = walletAddress.toLowerCase().trim();
     const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_USER_TABLE_NAME}?filterByFormula={wallet}='${cleanWalletAddress}'`;
     try {
@@ -238,8 +241,8 @@ async function fetchUserNameByWallet(walletAddress) {
 
 // Cüzdan adresini maskeleme fonksiyonu
 function maskWalletAddress(address, visibleChars = 4) {
-    if (!address || address.length < visibleChars * 2 + 3) {
-        return address;
+    if (!address || address.length < visibleChars * 2 + 3) { // 3 for "..."
+        return address; // Maskelemek için yeterince uzun değil
     }
     return `${address.substring(0, visibleChars)}...${address.substring(address.length - visibleChars)}`;
 }
@@ -251,330 +254,132 @@ async function initializeGame() {
     turnActionTaken = false;
     currentBattleId = null;
     selectedPlayerNFT = null;
-    selectedItemsForBattle = []; // Seçilen itemları sıfırla
 
-    gameContainer.style.display = 'none';
-    itemSelectionScreen.style.display = 'none'; // Item seçim ekranını gizle
-    characterSelectionScreen.style.display = 'flex'; // Karakter seçim ekranını göster
-    characterGrid.innerHTML = '';
+    // Her zaman karakter seçim ekranını göster
+    gameContainer.style.display = 'none'; // Oyun konteynerinin gizli olduğundan emin ol
+    characterSelectionScreen.style.display = 'flex'; // Karakter seçim ekranını görünür yap
+    characterGrid.innerHTML = ''; // Önceki kartları temizle
     selectCharacterButton.classList.add('disabled');
     selectCharacterButton.disabled = true;
     restartButton.classList.add('hidden');
-    disableItemSlots(); // Item slotlarını devre dışı bırak
+    attackButton.classList.add('hidden');
+    buffButton.classList.add('hidden');
+    disableActionButtons();
 
     // Cüzdan adresi henüz alınmadıysa, bekleme mesajını göster ve geri dön
     if (!playerWalletAddress) {
         displayWalletAddress.textContent = 'Cüzdan bekleniyor...';
-        loadingNFTsMessage.style.display = 'block';
+        loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
         loadingNFTsMessage.textContent = 'Cüzdan bilgisi bekleniyor...';
+        // console.log('Cüzdan adresi henüz alınmadı, initializeGame bekleniyor.'); // Debug log
         return; // postMessage dinleyicisi tarafından tekrar çağrılacak
     }
 
     // Cüzdan adresi mevcutsa, NFT'leri çekmeye başla
-    loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // Yükleme mesajını güncelle
-    loadingNFTsMessage.style.display = 'block'; // Yükleme mesajını göster
+    // console.log('Cüzdan adresi alındı:', playerWalletAddress, 'NFT\'ler yükleniyor...'); // Debug log
+    setTimeout(async () => {
+        allFetchedNFTs = await fetchNFTsFromAirtable(); // Tüm NFT'leri cüzdan filtresi olmadan çek
 
-    const playerNFTs = [];
-    const opponentNFTs = [];
-
-    try {
-        allFetchedNFTs = await fetchNFTsFromAirtable();
+        // Cüzdan adreslerini normalleştirerek filtrele
         const cleanedPlayerWalletAddress = playerWalletAddress ? playerWalletAddress.toLowerCase().trim() : null;
-        
-        allFetchedNFTs.forEach(nft => {
-            if (nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress) {
-                playerNFTs.push(nft);
-            } else {
-                opponentNFTs.push(nft);
-            }
-        });
+        const playerNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() === cleanedPlayerWalletAddress);
+        opponentNFTs = allFetchedNFTs.filter(nft => nft.wallet && nft.wallet.toLowerCase().trim() !== cleanedPlayerWalletAddress);
 
         displayWalletAddress.textContent = maskWalletAddress(playerWalletAddress || 'Bulunamadı');
-        loadingNFTsMessage.style.display = 'none'; // Yükleme tamamlandığında gizle
+        loadingNFTsMessage.textContent = 'NFT\'ler yükleniyor...'; // NFT yükleme mesajını güncelle
 
         if (playerNFTs.length > 0) {
             displayNFTsForSelection(playerNFTs);
+            // console.log('Oyuncu NFTleri yüklendi:', playerNFTs.length); // Debug log
         } else {
             characterGrid.innerHTML = '<p class="text-center text-red-400 col-span-full">Bu cüzdana ait NFT bulunamadı veya bir hata oluştu. NFT Doğrulaması yapmadıysanız Venus Bot aracılığıyla doğrulama talebi göndermek için Görevler sayfasını inceleyin.</p>';
-            selectCharacterButton.classList.add('disabled'); // NFT yoksa butonu devre dışı bırak
-            selectCharacterButton.disabled = true;
+            console.warn('Oyuncu NFTleri bulunamadı veya yüklendiğinde boş geldi.'); // Debug log
         }
-    } catch (error) {
-        gameMessagesElement.textContent = `NFT'ler yüklenirken bir sorun oluştu: ${error.message}. Lütfen konsolu kontrol edin ve Airtable ayarlarınızı doğrulayın.`;
-        console.error('initializeGame hatası:', error);
-        loadingNFTsMessage.textContent = 'NFT yüklenirken hata oluştu.';
-        loadingNFTsMessage.style.display = 'block';
-        selectCharacterButton.classList.add('disabled');
-        selectCharacterButton.disabled = true;
-    }
+    }, 500);
 }
 
 // Seçim için NFT'leri gösteren fonksiyon
 function displayNFTsForSelection(nfts) {
     characterGrid.innerHTML = '';
->>>>>>> parent of 684a79f (Update arena_v3.js)
-    if (nfts.length === 0) {
-        characterGrid.innerHTML = '<p class="text-center text-gray-400">Gösterilecek NFT bulunamadı. Lütfen daha sonra tekrar deneyin.</p>';
-        return;
-    }
-    characterGrid.innerHTML = '';
     nfts.forEach(nft => {
         const card = document.createElement('div');
-        card.className = 'character-card bg-cyber-light border-2 border-neon-cyan p-4 rounded-xl flex flex-col items-center cursor-pointer hover:border-neon-pink transition-all duration-300 relative';
-        card.dataset.id = nft.id;
-        card.dataset.name = nft.fields.Name;
-        card.dataset.atk = nft.fields.ATK;
-        card.dataset.def = nft.fields.DEF;
-        card.dataset.hp = nft.fields.HP;
-        card.dataset.imageUrl = nft.fields.Image && nft.fields.Image.length > 0 ? nft.fields.Image[0].url : 'https://placehold.co/200x200/6c757d/FFFFFF?text=NFT+ERROR';
-        card.dataset.level = nft.fields.Level;
-        card.dataset.critChance = nft.fields['Crit Chance'];
-        
+        card.classList.add('character-selection-card');
         card.innerHTML = `
-            <img src="${card.dataset.imageUrl}" alt="${card.dataset.name}" class="rounded-lg mb-4 w-full h-auto">
-            <h3 class="font-bold text-lg text-neon-cyan">${card.dataset.name}</h3>
-            <p class="text-sm">Seviye: <span class="text-neon-green">${card.dataset.level}</span></p>
-            <p class="text-sm">ATK: <span class="text-red-400">${card.dataset.atk}</span></p>
-            <p class="text-sm">DEF: <span class="text-green-400">${card.dataset.def}</span></p>
-            <div class="absolute top-2 left-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-full border border-neon-cyan">ID: ${nft.id.substring(0, 4)}...</div>
+            <img src="${nft.imageUrl}" alt="${nft.name}" onerror="this.onerror=null;this.src='https://placehold.co/150x150/6c757d/FFFFFF?text=NFT+ERROR';">
+            <h3>${nft.name}</h3>
+            <p>ATK: ${nft.atk} | DEF: ${nft.def}</p>
+            <p>LVL: ${nft.level} | CRIT: ${(nft.critChance * 100).toFixed(0)}%</p>
         `;
-        card.addEventListener('click', () => {
-            document.querySelectorAll('.character-card').forEach(c => c.classList.remove('selected-card'));
-            card.classList.add('selected-card');
-            selectedPlayerNFT = nft;
-            selectCharacterButton.disabled = false;
-        });
+        card.addEventListener('click', () => selectNFT(nft, card));
         characterGrid.appendChild(card);
     });
 }
 
-<<<<<<< HEAD
-// Oyunun başlatılması
-function initializeGame() {
-    // console.log('Oyun başlatılıyor. Cüzdan adresi:', playerWalletAddress);
-    characterSelectionScreen.style.display = 'block';
-    gameContainer.style.display = 'none';
-
-    // Cüzdan adresini ekrana yazdır (eğer varsa)
-=======
 // NFT seçme fonksiyonu
 function selectNFT(nft, cardElement) {
+    // console.log('NFT seçildi:', nft.name); // Debug: Hangi NFT seçildiğini logla
     const previouslySelected = document.querySelector('.character-selection-card.selected');
     if (previouslySelected) previouslySelected.classList.remove('selected');
     cardElement.classList.add('selected');
     selectedPlayerNFT = nft;
     selectCharacterButton.classList.remove('disabled');
     selectCharacterButton.disabled = false;
+    // console.log('Seç karakter butonu etkinleştirildi. disabled:', selectCharacterButton.disabled); // Debug: Butonun etkinleştirildiğini logla
 }
 
-// Seçilen NFT ile oyunu başlatma (artık item seçimine geçiş yapıyor)
+// Seçilen NFT ile oyunu başlatma
 async function startGameWithSelectedNFT() {
+    // console.log('startGameWithSelectedNFT fonksiyonu çağrıldı.'); // Debug: Fonksiyonun çağrıldığını logla
+    // console.log('selectedPlayerNFT değeri:', selectedPlayerNFT); // Debug: selectedPlayerNFT değerini logla
+
     if (!selectedPlayerNFT) {
         gameMessagesElement.textContent = "Lütfen bir karakter seçin!";
-        console.error("Hata: Karakter seçilmedi. Savaş başlatılamıyor.");
-        return;
-    }
-
-    // Karakter seçim ekranını gizle, item seçim ekranını göster
-    characterSelectionScreen.style.display = 'none';
-    itemSelectionScreen.style.display = 'flex';
-    displayItemsForSelection();
-}
-
-// Item seçimi için itemları gösteren fonksiyon
-function displayItemsForSelection() {
-    itemGrid.innerHTML = '';
-    selectedItemsForBattle = []; // Seçimi sıfırla
-    updateSelectedItemCount();
-    confirmItemsButton.classList.add('disabled');
-    confirmItemsButton.disabled = true;
-
-    // Tüm itemData'yı göster
-    itemData.forEach(item => {
-        const card = document.createElement('div');
-        card.classList.add('item-selection-card');
-        card.dataset.itemId = item.id; // Item ID'sini kaydet
-        card.innerHTML = `
-            <img src="${item.imageUrl}" alt="${item.name}" onerror="this.onerror=null;this.src='https://placehold.co/80x80/6c757d/FFFFFF?text=ITEM+ERROR';">
-            <h3>${item.name}</h3>
-            <p>${item.description}</p>
-        `;
-        card.addEventListener('click', () => toggleItemSelection(item, card));
-        itemGrid.appendChild(card);
-    });
-}
-
-// Item seçme/seçimi kaldırma fonksiyonu
-function toggleItemSelection(item, cardElement) {
-    const index = selectedItemsForBattle.findIndex(selected => selected.id === item.id);
-
-    if (index > -1) {
-        // Zaten seçiliyse kaldır
-        selectedItemsForBattle.splice(index, 1);
-        cardElement.classList.remove('selected');
-    } else {
-        // Seçili değilse ekle (maksimum sınıra ulaşılmadıysa)
-        if (selectedItemsForBattle.length < MAX_ITEM_SELECTION) {
-            selectedItemsForBattle.push(item);
-            cardElement.classList.add('selected');
-        } else {
-            // Maksimum item sayısına ulaşıldı mesajı
-            gameMessagesElement.textContent = `En fazla ${MAX_ITEM_SELECTION} eşya seçebilirsiniz!`;
-            setTimeout(() => gameMessagesElement.textContent = '', 2000); // Mesajı kısa süre sonra temizle
-        }
-    }
-    updateSelectedItemCount();
-    // 6 item seçildiyse butonu etkinleştir
-    if (selectedItemsForBattle.length === MAX_ITEM_SELECTION) {
-        confirmItemsButton.classList.remove('disabled');
-        confirmItemsButton.disabled = false;
-    } else {
-        confirmItemsButton.classList.add('disabled');
-        confirmItemsButton.disabled = true;
-    }
-}
-
-// Seçilen item sayısını güncelleyen fonksiyon
-function updateSelectedItemCount() {
-    selectedItemCount.textContent = `${selectedItemsForBattle.length}/${MAX_ITEM_SELECTION}`;
-}
-
-// Item seçimini onaylama ve savaşı başlatma
-async function confirmItemSelection() {
-    if (selectedItemsForBattle.length !== MAX_ITEM_SELECTION) {
-        gameMessagesElement.textContent = `Lütfen ${MAX_ITEM_SELECTION} eşya seçin!`;
+        console.error("Hata: Karakter seçilmedi. Savaş başlatılamıyor."); // Debug: Hata mesajı
         return;
     }
 
     let player1Name = "SEN";
->>>>>>> parent of 684a79f (Update arena_v3.js)
+    // Cüzdan adresine göre kullanıcı adını çek
     if (playerWalletAddress) {
-        displayWalletAddress.textContent = `Cüzdan Adresiniz: ${playerWalletAddress}`;
+        const fetchedName = await fetchUserNameByWallet(playerWalletAddress);
+        if (fetchedName) {
+            player1Name = fetchedName;
+        }
+    }
+    // Player sınıfına level ve critChance bilgileri CharacterData üzerinden geçiriliyor
+    // selectedPlayerNFT.items'ı Player constructor'ına ekledik
+    player1 = new Player(player1Name, initialPlayerHp, selectedPlayerNFT.level, 'Siz', false, selectedPlayerNFT, selectedPlayerNFT.items);
+    currentBattleId = player1.character.id; // Battle ID'nin player1'in karakter ID'si olduğundan emin olalım
+
+    let player2Name = "RAKİP";
+    let player2CharacterData;
+
+    if (opponentNFTs.length === 0) {
+        gameMessagesElement.textContent = "Rakip NFT'ler bulunamadı. Lütfen daha sonra tekrar deneyin veya NFT listesini kontrol edin.";
+        console.error("Hata: Rakip NFT'ler bulunamadı. Oyun başlatılamıyor.");
+        characterSelectionScreen.style.display = 'flex'; // Karakter seçim ekranını tekrar göster
+        gameContainer.style.display = 'none'; // Oyun konteynerini gizle
+        return; // Oyunun başlamasını engelle
     }
 
-    // Oyuncu karakterlerini seçme
-    if (allFetchedNFTs.length === 0) {
-        fetchNFTsFromAirtable();
-    } else {
-        renderCharacterSelection(allFetchedNFTs);
+    // Rakip NFT'lerinden rastgele birını seç
+    const player2CharIndex = Math.floor(Math.random() * opponentNFTs.length);
+    player2CharacterData = opponentNFTs[player2CharIndex];
+    if (player2CharacterData.wallet) {
+        const fetchedOpponentName = await fetchUserNameByWallet(player2CharacterData.wallet);
+        if (fetchedOpponentName) {
+            player2Name = fetchedOpponentName;
+        }
     }
-
-    selectCharacterButton.addEventListener('click', () => {
-        if (selectedPlayerNFT) {
-            startBattle(selectedPlayerNFT);
-        } else {
-            // Seçili karakter yoksa uyarı ver
-            // Kullanıcı arayüzüne bir mesaj kutusu ekleyerek bildirilebilir
-            console.warn('Lütfen bir karakter seçin.');
-        }
-    });
-
-    attackButton.addEventListener('click', () => {
-        if (gameActive && currentPlayer === player1 && !turnActionTaken) {
-            performAttack(player1, player2);
-            turnActionTaken = true;
-            nextTurn();
-        }
-    });
-
-    buffButton.addEventListener('click', () => {
-        if (gameActive && currentPlayer === player1 && !turnActionTaken) {
-            player1.character.applyBuff();
-            logMessage(`Player 1'in saldırı gücü arttı!`);
-            turnActionTaken = true;
-            nextTurn();
-        }
-    });
-
-    restartButton.addEventListener('click', () => {
-        resetGame();
-    });
-}
-
-// Savaşın başlaması
-function startBattle(playerNFT) {
-    characterSelectionScreen.style.display = 'none';
-    gameContainer.style.display = 'flex';
-    gameActive = true;
-    currentTurn = 0;
     
-    // Player 1'i seçilen NFT ile oluştur
-    const playerNFTData = {
-        id: playerNFT.id,
-        name: playerNFT.fields.Name,
-        atk: playerNFT.fields.ATK,
-        def: playerNFT.fields.DEF,
-        initialHp: playerNFT.fields.HP,
-        imageUrl: playerNFT.fields.Image && playerNFT.fields.Image.length > 0 ? playerNFT.fields.Image[0].url : 'https://placehold.co/200x200/6c757d/FFFFFF?text=NFT+ERROR',
-        level: playerNFT.fields.Level,
-        critChance: playerNFT.fields['Crit Chance']
-    };
-    player1 = new Player('Sen', initialPlayerHp, playerNFTData.level, '', false, playerNFTData);
-
-    // AI rakibi rastgele bir NFT ile oluştur
-    const availableOpponentNFTs = allFetchedNFTs.filter(nft => nft.id !== playerNFT.id);
-    if (availableOpponentNFTs.length === 0) {
-        console.error("Rakip için uygun NFT bulunamadı. Lütfen daha fazla NFT yükleyin.");
-        return;
-    }
-    const randomOpponentNFT = availableOpponentNFTs[Math.floor(Math.random() * availableOpponentNFTs.length)];
-    const opponentNFTData = {
-        id: randomOpponentNFT.id,
-        name: randomOpponentNFT.fields.Name,
-        atk: randomOpponentNFT.fields.ATK,
-        def: randomOpponentNFT.fields.DEF,
-        initialHp: randomOpponentNFT.fields.HP,
-        imageUrl: randomOpponentNFT.fields.Image && randomOpponentNFT.fields.Image.length > 0 ? randomOpponentNFT.fields.Image[0].url : 'https://placehold.co/200x200/6c757d/FFFFFF?text=NFT+ERROR',
-        level: randomOpponentNFT.fields.Level,
-        critChance: randomOpponentNFT.fields['Crit Chance']
-    };
-    player2 = new Player(opponentNFTData.name, initialPlayerHp, opponentNFTData.level, '', true, opponentNFTData);
+    // Player sınıfına level ve critChance bilgileri CharacterData üzerinden geçiriliyor
+    // player2CharacterData.items'ı Player constructor'ına ekledik
+    player2 = new Player(player2Name, initialPlayerHp, player2CharacterData.level, 'Rakip', true, player2CharacterData, player2CharacterData.items);
 
     currentPlayer = player1;
-    logMessage(`Savaş başladı! ${player1.name} vs ${player2.name}`);
+    gameActive = true;
 
-<<<<<<< HEAD
-    // UI'ı başlangıç değerleriyle güncelle
-    updateUI();
-    // Battle intro ekranını göster
-    showBattleIntroScreen(player1, player2);
-}
-
-// Battle intro ekranını göster ve gizle
-function showBattleIntroScreen(player, opponent) {
-    battleIntroScreen.style.display = 'flex';
-    
-    // Player 1
-    introPlayerCard.innerHTML = `
-        <div class="character-card-visual-small">
-            ${player.character.toVisualHtml()}
-        </div>
-        <div class="text-center mt-4">
-            <h3 class="font-bold text-lg text-neon-cyan">${player.character.name}</h3>
-            <p class="text-sm text-neon-green">Seviye: ${player.character.level}</p>
-        </div>
-    `;
-    introPlayerName.textContent = player.name;
-    
-    // Player 2
-    const introOpponentCard = document.getElementById('intro-opponent-card');
-    const introOpponentName = document.getElementById('intro-opponent-name');
-    introOpponentCard.innerHTML = `
-        <div class="character-card-visual-small">
-            ${opponent.character.toVisualHtml()}
-        </div>
-        <div class="text-center mt-4">
-            <h3 class="font-bold text-lg text-neon-pink">${opponent.character.name}</h3>
-            <p class="text-sm text-neon-green">Seviye: ${opponent.character.level}</p>
-        </div>
-    `;
-    introOpponentName.textContent = opponent.name;
-
-    setTimeout(() => {
-        battleIntroScreen.style.display = 'none';
-        updateUI(); // Savaş ekranına geçmeden önce UI'ı güncelle
-=======
-    itemSelectionScreen.style.display = 'none'; // Item seçim ekranını gizle
+    characterSelectionScreen.style.display = 'none';
     gameContainer.style.display = 'flex';
 
     mainGameContent.style.display = 'none';
@@ -599,209 +404,290 @@ function showBattleIntroScreen(player, opponent) {
         gameMessagesElement.style.display = 'flex';
         gameMessagesElement.textContent = `SAVAŞ BAŞLADI! SIRA SENDE.`;
         updateUI();
-        enableItemSlots(); // Item slotlarını etkinleştir
+        attackButton.classList.remove('hidden');
+        buffButton.classList.remove('hidden');
         restartButton.classList.add('hidden');
->>>>>>> parent of 684a79f (Update arena_v3.js)
     }, 3000);
 }
 
-
-// UI güncelleme fonksiyonu
+// Kullanıcı arayüzünü güncelleyen fonksiyon
 function updateUI() {
-<<<<<<< HEAD
-    // Player 1 (Sen) Barı Güncelleme
-    player1Bar.style.display = 'flex';
-=======
     // Oyuncu 1 (Sen) Barı Güncellemesi
     player1Avatar.src = player1.character.imageUrl;
->>>>>>> parent of 684a79f (Update arena_v3.js)
     player1NameBar.textContent = player1.name;
+    const p1Hp = (player1.character.currentHp / initialPlayerHp) * 100;
+    player1HpBarSmall.style.width = `${Math.max(0, p1Hp)}%`;
+    player1HpBarText.textContent = `${Math.max(0, player1.character.currentHp)} HP`;
+    // Düşük HP'de kırmızıya dönme
+    player1HpBarSmall.classList.toggle('low-hp', p1Hp <= 30);
+
     player1LevelBar.textContent = player1.character.level;
     player1AtkBar.textContent = player1.character.effectiveAtk;
     player1DefBar.textContent = player1.character.effectiveDef;
     player1CritBar.textContent = `${(player1.character.criticalChance * 100).toFixed(0)}%`;
-    player1Avatar.innerHTML = player1.character.toVisualHtml();
-    
-    // Player 1 HP Barı Güncelleme
-    updateHpBar(player1, player1HpBarSmall, player1HpBarText);
 
-    // Player 1 Items Barı Güncelleme
-    const player1ItemsBarContent = player1.character.items.map(item => `
-        <div class="player-bar-item-icon">${item.icon}</div>
-    `).join('');
-    player1ItemsBar.innerHTML = player1ItemsBarContent;
+    // Item ikonlarını güncelle
+    player1ItemsBar.innerHTML = ''; // Mevcut itemları temizle
+    // player1.character.items dizisi boşsa veya tanımsızsa, varsayılan ikonları göster
+    const itemsToDisplay = player1.character.items && player1.character.items.length > 0 ? player1.character.items : [
+        { icon: '⚡' },
+        { icon: '🛡️' },
+        { icon: '💊' }
+    ];
+
+    itemsToDisplay.forEach(item => {
+        const itemIconDiv = document.createElement('div');
+        itemIconDiv.classList.add('player-bar-item-icon');
+        itemIconDiv.textContent = item.icon; // Item objesinde 'icon' özelliği olduğunu varsayıyoruz
+        player1ItemsBar.appendChild(itemIconDiv);
+    });
 
 
-    // Player 2 (Rakip) Alanını Güncelleme
-    player2Area.style.display = 'flex';
+    // Oyuncu 2 (Rakip) Alanı Güncellemesi (eski kart görünümü)
     player2NameDisplay.textContent = player2.name;
+    const p2Hp = (player2.character.currentHp / initialPlayerHp) * 100;
+    player2HpText.textContent = Math.max(0, player2.character.currentHp);
+    player2HpBar.style.width = `${Math.max(0, p2Hp)}%`;
+    player2HpBar.classList.toggle('low-hp', p2Hp <= 30);
     player2CharacterCardVisualElement.innerHTML = player2.character.toVisualHtml();
-<<<<<<< HEAD
-    player2CharacterNameElement.textContent = player2.character.name;
-    player2CharacterStatsElement.innerHTML = player2.character.toStatsHtml(player2.name, player2.character.level);
-    updateHpBar(player2, player2HpBar, player2HpText);
-
-    // Oyuncu sırasına göre glow efektini güncelle
-    if (currentPlayer === player1) {
-        player1Bar.classList.add('current-player-glow');
-        player2Area.classList.remove('current-player-glow');
-        attackButton.disabled = false;
-        buffButton.disabled = false;
-=======
     player2CharacterNameElement.textContent = player2.character.toNameHtml();
     player2CharacterStatsElement.innerHTML = player2.character.toStatsHtml(player2.name, player2.level);
 
-    // Oyuncu glow efektleri
-    player1Bar.classList.toggle('current-player-glow', currentPlayer === player1); // Player1 barı için glow
+    // Oyuncu glow efektleri (hala rakip kartında aktif olacak)
+    // Oyuncu 1'in büyük kart alanı gizlendiği için bu kısım artık sadece player2Area için geçerli.
+    // Ancak, currentPlayer'ın player1 olup olmadığını kontrol ederek yine de doğru şekilde çalışır.
+    player1Area.classList.toggle('current-player-glow', currentPlayer === player1); // Bu satır artık görünür bir etki yaratmayacak
     player2Area.classList.toggle('current-player-glow', currentPlayer === player2);
 
     if (gameActive && !currentPlayer.isAI) {
-        enableItemSlots(); // Kendi sıramızda item slotlarını etkinleştir
->>>>>>> parent of 684a79f (Update arena_v3.js)
+        if (!turnActionTaken) enableActionButtons();
+        else disableActionButtons();
     } else {
-        player1Bar.classList.remove('current-player-glow');
-        player2Area.classList.add('current-player-glow');
-        attackButton.disabled = true;
-        buffButton.disabled = true;
+        disableActionButtons();
     }
 }
 
-// HP barını güncelleme fonksiyonu - Tekilleştirildi
-function updateHpBar(player, hpBarElement, hpTextElement) {
-    const hpPercentage = (player.character.currentHp / player.character.maxHp) * 100;
-    hpBarElement.style.width = `${hpPercentage}%`;
-    hpTextElement.textContent = `${Math.floor(player.character.currentHp)} / ${player.character.maxHp}`;
-    if (hpPercentage < 25) {
-        hpBarElement.classList.add('low-hp');
-    } else {
-        hpBarElement.classList.remove('low-hp');
-    }
+// Aksiyon butonlarını devre dışı bırakan fonksiyon
+function disableActionButtons() {
+    attackButton.classList.add('disabled');
+    attackButton.disabled = true;
+    buffButton.classList.add('disabled');
+    buffButton.disabled = true;
 }
 
-// Saldırı fonksiyonu
-function performAttack(attacker, defender) {
-    if (!gameActive) return;
-
-    let damage = Math.max(0, attacker.character.effectiveAtk - defender.character.effectiveDef);
-    let isCritical = Math.random() < attacker.character.criticalChance;
-
-    if (isCritical) {
-        damage *= attacker.character.criticalMultiplier;
-        logMessage(`💥 Kritik Vuruş! ${attacker.name} -> ${defender.name} (${Math.floor(damage)} hasar)`);
-    } else {
-        logMessage(`${attacker.name} -> ${defender.name} (${Math.floor(damage)} hasar)`);
-    }
-
-    defender.character.currentHp -= damage;
-    console.log(`${defender.name} adlı oyuncunun canı: ${defender.character.currentHp}`);
-    
-    // Can değeri negatif olamaz
-    if (defender.character.currentHp < 0) {
-        defender.character.currentHp = 0;
-    }
-    
-    updateUI(); // UI'ı her saldırıdan sonra güncelle
-
-    if (checkGameOver()) {
-        endGame();
-    }
+// Aksiyon butonlarını etkinleştiren fonksiyon
+function enableActionButtons() {
+    attackButton.classList.remove('disabled');
+    attackButton.disabled = false;
+    buffButton.classList.remove('disabled');
+    buffButton.disabled = false;
 }
 
-// Sıradaki tur
-function nextTurn() {
-    if (!gameActive) return;
-    
-    // Buff süresini azalt
-    player1.character.decrementBuffTurn();
-    player2.character.decrementBuffTurn();
-    
+// Saldırı işlemini yöneten fonksiyon
+function handleAttack() {
+    if (!gameActive || turnActionTaken) return;
+    turnActionTaken = true;
+    disableActionButtons();
+
+    const attacker = currentPlayer.character;
+    const defender = (currentPlayer === player1) ? player2.character : player1.character;
+    const defenderVisualElement = (currentPlayer === player1) ? player2CharacterCardVisualElement : player1CharacterCardVisualElement; // Rakip kart görseli
+    const attackerVisualElement = (currentPlayer === player1) ? player1Avatar : player2CharacterCardVisualElement; // Saldıranın görseli (player1 için avatar, player2 için kart)
+
+    // Saldıranın görseline animasyon ekle
+    if (currentPlayer === player1) {
+        // Player 1 için avatarın kendisi sallanabilir veya başka bir efekt eklenebilir
+        player1Avatar.style.transform = 'scale(1.1)';
+        player1Avatar.style.transition = 'transform 0.2s ease-in-out';
+        setTimeout(() => {
+            player1Avatar.style.transform = 'scale(1)';
+        }, 200);
+    } else {
+        attackerVisualElement.classList.add('attacking');
+        setTimeout(() => {
+            attackerVisualElement.classList.remove('attacking');
+        }, 800);
+    }
+
+
+    let damage = Math.max(0, attacker.effectiveAtk - defender.effectiveDef);
+    let message = `${currentPlayer.name}'in ${attacker.name} saldırdı! `;
+    if (Math.random() < attacker.criticalChance) {
+        damage = Math.round(damage * attacker.criticalMultiplier);
+        message += `KRİTİK VURUŞ! `;
+    }
+    defender.currentHp -= damage;
+    message += `${defender.name}'e ${damage} hasar verdi.`;
+    gameMessagesElement.textContent = message;
+
+    defenderVisualElement.classList.add('hit');
+    setTimeout(() => {
+        defenderVisualElement.classList.remove('hit');
+    }, 900);
+
+    updateUI();
+    setTimeout(() => {
+        if (!checkGameOver()) endTurn();
+    }, 1000);
+}
+
+// Buff işlemini yöneten fonksiyon
+function handleBuff() {
+    if (!gameActive || turnActionTaken) return;
+    turnActionTaken = true;
+    disableActionButtons();
+
+    const playerCharacter = currentPlayer.character;
+    const playerVisualElement = (currentPlayer === player1) ? player1Avatar : player2CharacterCardVisualElement; // Bufflanan görseli (player1 için avatar, player2 için kart)
+
+    playerCharacter.applyBuff();
+    gameMessagesElement.textContent = `${currentPlayer.name}'in ${playerCharacter.name} güçlendi! Saldırı gücü ${playerCharacter.buffTurnsLeft} tur boyunca arttı.`;
+
+    // Buff animasyonunu uygulayın
+    if (currentPlayer === player1) {
+        // Player 1 için avatarın kendisi parlayabilir veya başka bir efekt eklenebilir
+        player1Avatar.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.6)';
+        player1Avatar.style.transition = 'box-shadow 0.5s ease-in-out';
+        setTimeout(() => {
+            player1Avatar.style.boxShadow = 'none';
+        }, 1500);
+    } else {
+        playerVisualElement.classList.add('buffed-animation');
+        setTimeout(() => {
+            playerVisualElement.classList.remove('buffed-animation');
+        }, 1500);
+    }
+
+    updateUI();
+    setTimeout(() => {
+        endTurn();
+    }, 1000);
+}
+
+// Turu bitiren fonksiyon
+function endTurn() {
+    currentTurn++;
+    currentPlayer.character.decrementBuffTurn();
     currentPlayer = (currentPlayer === player1) ? player2 : player1;
     turnActionTaken = false;
-    currentTurn++;
-    logMessage(`--- Tur ${currentTurn} ---`);
+
+    gameMessagesElement.textContent = `SIRA ${currentPlayer.name.toUpperCase()}DE.`;
     updateUI();
 
-    if (currentPlayer === player2) {
-        setTimeout(aiTurn, 1500); // AI sırası için 1.5 saniye bekle
-    }
+    if (currentPlayer.isAI) setTimeout(aiTurn, 1500);
 }
 
-// AI'nın sırası
-function aiTurn() {
-    if (!gameActive) return;
-
-    const aiChoice = Math.random();
-    if (aiChoice < 0.2 && !player2.character.buffActive) {
-        // %20 şansla buff kullan (eğer aktif değilse)
-        player2.character.applyBuff();
-        logMessage(`Rakip güçlendi!`);
-    } else {
-        // Normal saldırı
-        performAttack(player2, player1);
-    }
-    
-    turnActionTaken = true;
-    nextTurn();
-}
-
-// Oyun sonu kontrolü
+// Oyun bitişini kontrol eden fonksiyon
 function checkGameOver() {
-    if (player1.character.currentHp <= 0) {
-        logMessage(`Sen kaybettin!`);
-        return true;
-    }
-    if (player2.character.currentHp <= 0) {
-        logMessage(`Sen kazandın!`);
+    if (player1.character.currentHp <= 0 || player2.character.currentHp <= 0) {
+        gameActive = false;
+        disableActionButtons();
+        restartButton.classList.remove('hidden');
+        let winnerPlayer = null;
+        let winnerMessage = "";
+        let winner = "";
+
+        if (player1.character.currentHp <= 0 && player2.character.currentHp <= 0) {
+            winnerMessage = "BERABERE! İki karakter de düştü!";
+            winner = "Draw";
+        } else if (player1.character.currentHp <= 0) {
+            winnerMessage = `${player2.name} kazandı! ${player1.name} düştü!`;
+            winnerPlayer = player2;
+            winner = player2.name;
+        } else {
+            winnerMessage = `${player1.name} kazandı! ${player2.name} düştü!`;
+            winnerPlayer = player1;
+            winner = player1.name;
+        }
+        gameMessagesElement.textContent = winnerMessage;
+
+        if (winnerPlayer) {
+            // Kazanan oyuncu player1 ise avatarını, player2 ise kartını hedefle
+            const winnerVisualElement = (winnerPlayer === player1) ? player1Avatar : player2CharacterCardVisualElement;
+            winnerVisualElement.classList.add('winner-animation');
+            setTimeout(() => {
+                winnerVisualElement.classList.remove('winner-animation');
+            }, 2000);
+        }
+
+        sendBattleResultToWebhook(winner, player1.character.id);
         return true;
     }
     return false;
 }
 
-// Oyunu bitir
-function endGame() {
-    gameActive = false;
-    attackButton.disabled = true;
-    buffButton.disabled = true;
-    restartButton.style.display = 'block'; // Yeniden başlatma butonu göster
+// Yapay zeka turunu yöneten fonksiyon
+function aiTurn() {
+    if (currentPlayer.character.buffActive && currentPlayer.character.buffTurnsLeft > 0) {
+        handleAttack();
+    } else if (Math.random() < 0.7) { // %70 saldırma şansı
+        handleAttack();
+    } else { // %30 buff kullanma şansı
+        handleBuff();
+    }
 }
 
-// Oyunu sıfırla
-function resetGame() {
-    gameActive = false;
-    currentTurn = 0;
-    player1 = null;
-    player2 = null;
-    currentPlayer = null;
-    turnActionTaken = false;
-    currentBattleId = null;
-    selectedPlayerNFT = null;
-    gameMessagesElement.innerHTML = '';
-    restartButton.style.display = 'none';
-    gameContainer.style.display = 'none';
-    characterSelectionScreen.style.display = 'block';
-    
-    // UI'ı temizle
-    updateUI();
-    // Yeni karakter seçimi için AirTable'dan verileri tekrar çek
-    fetchNFTsFromAirtable();
-}
+// Savaş sonucunu webhook'a gönderen fonksiyon
+async function sendBattleResultToWebhook(winner, battleId) {
+    const payload = {
+        battleId: battleId,
+        timestamp: new Date().toISOString(),
+        player1: {
+            name: player1.name,
+            character: player1.character.name,
+            finalHp: Math.max(0, player1.character.currentHp),
+            level: player1.character.level, // Character'dan level al
+            isAI: player1.isAI
+        },
+        player2: {
+            name: player2.name,
+            character: player2.character.name,
+            finalHp: Math.max(0, player2.character.currentHp),
+            level: player2.character.level, // Character'dan level al
+            isAI: player2.isAI
+        },
+        totalTurns: currentTurn,
+        winner: winner
+    };
 
-// Mesajları loglama fonksiyonu
-function logMessage(message) {
-    const p = document.createElement('p');
-    p.textContent = message;
-    gameMessagesElement.appendChild(p);
-    gameMessagesElement.scrollTop = gameMessagesElement.scrollHeight; // En son mesaja kaydır
+    // Make.com'a gönderilecek payload'ı konsola yazdırıyoruz.
+    // Bu, Make.com'a giden verinin içeriğini kontrol etmenizi sağlar.
+    console.log('Sending payload to webhook:', payload); 
+
+    try {
+        const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Webhook send failed:', response.status, errorText);
+        } else {
+            console.log('Battle results sent to webhook successfully!'); // Bu logu bırakıyoruz, başarılı gönderimi gösteriyor
+        }
+    } catch (error) {
+        console.error('Error sending battle results to webhook:', error);
+    }
 }
 
 // postMessage ile cüzdan adresini dinle
 window.addEventListener('message', async (event) => {
+    // console.log('iframe içinde mesaj alındı. Origin:', event.origin, 'Data:', event.data); // Debug logu kaldırıldı
+
+    // Güvenlik: Mesajın beklenen kaynaktan geldiğini doğrulayın
     const allowedOrigins = [
         'https://cryptoyogi.webflow.io',
         'https://www.cryptoyogi.com',
         'https://yagizcanmutlu.github.io',
         'https://www.cryptoyogi.world'
     ];
+
+    // console.log('Kontrol edilen Origin:', event.origin); // Debug logu kaldırıldı
+    // console.log('İzin verilen Origins:', allowedOrigins); // Debug logu kaldırıldı
 
     if (!allowedOrigins.includes(event.origin)) {
         console.warn('Güvenlik uyarısı: Bilinmeyen kaynaktan mesaj alındı!', event.origin);
@@ -810,33 +696,15 @@ window.addEventListener('message', async (event) => {
 
     if (event.data && event.data.type === 'walletAddress') {
         playerWalletAddress = event.data.address;
+        // console.log('postMessage ile alınan cüzdan adresi:', playerWalletAddress); // Cüzdan adresi logu kaldırıldı
+        // Cüzdan adresi alındıktan sonra oyunu başlat
         initializeGame();
     }
 });
 
 // Oyun butonları için olay dinleyicileri
-<<<<<<< HEAD
-document.addEventListener('DOMContentLoaded', () => {
-    // DOM yüklendikten sonra oyunu başlatmak için, postMessage beklemesi yerine direkt initializeGame çağrılabilir.
-    // Eğer postMessage mekanizması dışarıdan bir adres alıyorsa, bu kısım dışarıda kalabilir.
-    // Eğer adres yoksa, anonim bir şekilde oyunu başlatmak için bu satır kullanılabilir:
-    // initializeGame();
-=======
+// Bu dinleyiciler, iframe içindeki butonlara bağlanır
 selectCharacterButton.addEventListener('click', startGameWithSelectedNFT);
-confirmItemsButton.addEventListener('click', confirmItemSelection); // Yeni item onay butonu
+attackButton.addEventListener('click', handleAttack);
+buffButton.addEventListener('click', handleBuff);
 restartButton.addEventListener('click', initializeGame);
-
-// Item slotlarına olay dinleyicileri ekle
-itemSlotsContainer.addEventListener('click', (event) => {
-    const clickedSlot = event.target.closest('.item-slot');
-    if (clickedSlot && !clickedSlot.classList.contains('disabled')) {
-        const itemId = clickedSlot.dataset.itemId;
-        if (itemId) {
-            handleItemUse(itemId, clickedSlot);
-        }
-    }
->>>>>>> parent of 684a79f (Update arena_v3.js)
-});
-
-// Oyunun ilk çağrısı
-initializeGame();
