@@ -157,7 +157,7 @@ const introPlayerName = document.getElementById('intro-player-name');
 const mainGameContent = document.querySelector('.main-game-content');
 
 // Airtable API bilgileri
-const AIRTABLE_API_KEY = 'patNmkPQFkKD7rwMg.ad10006df9da05fea81089b46caab7f1629b474e88b8bf69d91269c58b50e211';
+const AIRTABLE_API_KEY = 'patHY39bvGqiBVDCN.719c8ac3361113671055eec87d8fffd998953e6918152fd5718b1f2f5d8a07e3';
 const AIRTABLE_BASE_ID = 'appBuciupEMutB7Z0';
 const AIRTABLE_NFT_TABLE_NAME = 'nft_list';
 const AIRTABLE_USER_TABLE_NAME = 'user_list';
