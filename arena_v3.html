@@ -1157,6 +1157,24 @@
                 gap: 5px;
             }
         }
+
+        @media (max-width: 768px) {
+    .game-buttons-sidebar {
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 10px !important;
+        flex-wrap: wrap;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .game-button {
+        flex: 1 1 120px;
+        min-width: 120px;
+        max-width: 180px;
+        margin: 0;
+    }
+}
     </style>
 </head>
 <body>
@@ -1261,8 +1279,10 @@
                 </div>
             </div>
         </div>
-        <!-- Game Messages Area -->
-        <div class="game-messages" id="game-messages">SAVAŞ BAŞLADI! SIRA SENDE.</div>
+        <div id="game-messages" class="w-full text-center py-3 font-bold text-lg"></div>
+        <div id="game-container">
+            <!-- Burada ana oyun içeriği ve butonlar var -->
+        </div>
     </div>
     <!-- Link your JavaScript file here -->
     <script src="arena_v3.js"></script>
