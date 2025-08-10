@@ -119,7 +119,7 @@
             border-radius: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
             padding: 20px;
-            margin: 80px auto 20px auto;
+            margin: 80px auto 20px auto; /* Reverted to 80px */
             max-width: 1200px;
             position: relative;
             backdrop-filter: blur(10px);
@@ -140,7 +140,7 @@
         /* Game Title */
         .game-title {
             font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
+            font-size: 2.5rem; /* Reverted to 2.5rem */
             font-weight: 900;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan));
             -webkit-background-clip: text;
@@ -166,7 +166,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+<<<<<<< HEAD
             gap: 20px;
+=======
+            gap: 20px; /* Reverted to 20px */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
             width: 100%;
             margin-bottom: 30px;
         }
@@ -175,7 +179,11 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
+<<<<<<< HEAD
             gap: 30px;
+=======
+            gap: 30px; /* Reverted to 30px */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
             flex-grow: 1;
             width: 100%;
             max-width: 800px;
@@ -204,12 +212,21 @@
         }
 
         #player2-area {
+<<<<<<< HEAD
             border: none;
             box-shadow: none;
             background: none;
             padding: 0;
             max-width: 400px;
             margin-top: -90px;
+=======
+            border: none; /* Removed border */
+            box-shadow: none; /* Removed box shadow */
+            background: none; /* Removed background */
+            padding: 0; /* Removed padding */
+            max-width: 400px; /* Adjusted max-width for opponent card */
+            margin-top: -90px; /* Reverted to -90px */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
         }
 
         .player-area::before {
@@ -323,8 +340,13 @@
         }
 
         .hp-overlay-text .heart-icon {
+<<<<<<< HEAD
             color: var(--neon-pink);
             font-size: 0.9em;
+=======
+            color: var(--neon-pink); /* Red heart */
+            font-size: 0.9em; /* Reverted to 0.9em */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
         }
 
         /* Character Card Visual */
@@ -444,6 +466,7 @@
         .game-messages {
             background: rgba(10, 10, 10, 0.5);
             border-radius: 15px;
+<<<<<<< HEAD
             padding: 25px;
             text-align: center;
             font-family: 'Orbitron', monospace;
@@ -455,6 +478,19 @@
             align-items: center;
             justify-content: center;
             margin: -40px auto 20px auto;
+=======
+            padding: 25px; /* Reverted to 25px */
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem; /* Reverted to 1.3rem */
+            font-weight: 600;
+            color: var(--neon-orange);
+            min-height: 80px; /* Reverted to 80px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -40px auto 20px auto; /* Reverted to -40px auto 20px auto */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
             max-width: 80%;
             position: relative;
             overflow: hidden;
@@ -492,8 +528,13 @@
             min-width: 180px;
             align-items: center;
             justify-content: center;
+<<<<<<< HEAD
             margin-top: -60px;
             margin-bottom: 80px;
+=======
+            margin-top: -60px; /* Reverted to -60px */
+            margin-bottom: 80px; /* Reverted to 80px */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
         }
 
         /* General Game Button Style */
@@ -653,7 +694,7 @@
             border-radius: 20px;
             box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), inset 0 0 50px rgba(0, 255, 255, 0.1);
             padding: 30px;
-            margin: 20px auto;
+            margin: 20px auto; /* Reverted to 20px */
             max-width: 1000px;
             width: 90%;
             text-align: center;
@@ -829,6 +870,7 @@
             margin-top: 20px;
             opacity: 0;
             transition: opacity 0.8s ease-out 0.5s;
+            /* New style added */
             text-align: center;
         }
 
@@ -965,7 +1007,11 @@
             }
 
             .game-container {
+<<<<<<< HEAD
                 margin-top: 100px;
+=======
+                margin-top: 100px; /* Reverted to 100px */
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
                 margin-bottom: 10px;
             }
 
@@ -995,6 +1041,7 @@
             }
 
             .game-messages {
+<<<<<<< HEAD
                 font-size: 1rem;
                 padding: 15px;
                 min-height: 60px;
@@ -1009,6 +1056,69 @@
 
             .game-button {
                 padding: 12px 20px;
+=======
+                font-size: 0.9rem; /* Reverted to 0.9rem */
+                padding: 15px; /* Reverted to 15px */
+                max-width: 98%;
+                min-height: 60px; /* Reverted to 60px */
+                bottom: 10px; /* Reverted to 10px */
+            }
+
+            .game-buttons-sidebar {
+                width: 90%;
+                flex-direction: row; /* Keep as row for mobile */
+                flex-wrap: wrap; /* Allow wrapping on smaller screens */
+                justify-content: center; /* Center items when wrapped */
+                gap: 10px; /* Adjusted gap for mobile buttons */
+                margin-top: 5px; /* Reverted to 5px */
+                margin-bottom: 60px; /* Reverted to 60px */
+            }
+
+            .game-button, .start-game-button-selection {
+                width: calc(50% - 10px); /* Adjusted width for two buttons side-by-side on mobile, accounting for gap */
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .character-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+
+            .character-selection-card img {
+                width: 100px;
+                height: 100px;
+            }
+
+            #intro-player-card {
+                width: 250px;
+                height: 350px;
+            }
+
+            #intro-player-name {
+                font-size: 1.8rem;
+            }
+
+            /* Mobile vertical top spacing adjustment */
+            .character-selection-screen {
+                margin-top: 50px; /* Reverted to 50px */
+            }
+
+            /* Player bar mobile compatibility */
+            .player-bar {
+                flex-direction: row; /* Remain horizontal */
+                width: 98%;
+                padding: 8px 15px;
+                margin-bottom: 15px;
+            }
+
+            .player-bar-avatar {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+
+            .player-bar-name {
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
                 font-size: 1rem;
             }
 
@@ -1047,6 +1157,7 @@
     <!-- Main Game UI -->
     <div id="game-ui" class="w-full flex-grow flex items-center justify-center relative">
 
+<<<<<<< HEAD
         <!-- Player Bar (Visible on mobile) -->
         <div id="player1-bar" class="player-bar absolute top-0 left-1/2 -translate-x-1/2 translate-y-10 z-10 w-[95%] sm:w-[500px]">
             <div class="player-bar-avatar">
@@ -1056,11 +1167,56 @@
                 <div id="player1-name-bar" class="player-bar-name">Player 1</div>
                 <div class="player-bar-hp-container">
                     <div id="player1-hp-bar-inner" class="player-bar-hp"></div>
+=======
+    <!-- Game Container -->
+    <div class="game-container" id="game-container">
+        <h1 class="game-title">NFT BATTLE ARENA</h1>
+
+        <!-- Battle Intro Screen -->
+        <div id="battle-intro-screen">
+            <h2 class="text-3xl font-orbitron text-neon-cyan mb-8">Savaş Başlıyor!</h2>
+            <div id="intro-player-card" class="character-card-visual"></div>
+            <p id="intro-player-name" class="text-center"></p>
+        </div>
+
+        <!-- Main Game Content -->
+        <div class="main-game-content">
+            <!-- Player 1 (You) Bar -->
+            <div class="player-bar" id="player1-bar">
+                <div class="player-bar-avatar">
+                    <!-- NFT image will go here. Should be updated from JavaScript. -->
+                    <img id="player1-avatar" src="https://placehold.co/60x60/8000ff/ffffff?text=P1" alt="Player 1 Avatar">
+                </div>
+                <div class="player-bar-info">
+                    <div class="player-bar-name" id="player1-name-bar">SEN</div>
+                    <div class="player-bar-hp-container">
+                        <div id="player1-hp-bar-small" class="player-bar-hp" style="width: 100%;"></div>
+                        <div class="hp-overlay-text">
+                            <span class="heart-icon">❤️</span> <span id="player1-hp-bar-text">100</span> HP
+                        </div>
+                    </div>
+                    <!-- Player stats added here -->
+                    <div class="player-bar-stats">
+                        <div class="player-bar-stat-item">LVL: <span id="player1-level-bar" class="player-bar-stat-value">?</span></div>
+                        <div class="player-bar-stat-item">ATK: <span id="player1-atk-bar" class="player-bar-stat-value">?</span></div>
+                        <div class="player-bar-stat-item">DEF: <span id="player1-def-bar" class="player-bar-stat-value">?</span></div>
+                        <div class="player-bar-stat-item">CRIT: <span id="player1-crit-bar" class="player-bar-stat-value">?%</span></div>
+                    </div>
+                </div>
+                <!-- Removed old HP text span -->
+                <!-- Item icons container for player bar -->
+                <div class="player-bar-items" id="player1-items-bar">
+                    <!-- Item icons will be added here dynamically by JavaScript -->
+                    <div class="player-bar-item-icon">⚡</div>
+                    <div class="player-bar-item-icon">🛡️</div>
+                    <div class="player-bar-item-icon">💊</div>
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
                 </div>
             </div>
             <div id="player1-hp-text" class="player-bar-hp-text">100 / 100 HP</div>
         </div>
 
+<<<<<<< HEAD
         <!-- The game container holds the battle screen -->
         <div id="game-container" class="game-container">
             <h1 id="game-title" class="game-title">ARENA</h1>
@@ -1088,6 +1244,25 @@
                         <div id="player1-card-visual" class="character-card-visual">
                             <img id="player1-character-image" src="https://placehold.co/280x380/ff0080/ffffff?text=P1" alt="Player 1 Character">
                         </div>
+=======
+            <div class="player-areas-wrapper">
+                <!-- Player 2 (Opponent) Area -->
+                <div class="player-area" id="player2-area">
+                    <div class="player-info-top">
+                        <h2 id="player2-name-display">RAKİP</h2>
+                        <!-- Removed old HP text p tag -->
+                        <div class="hp-bar-container">
+                            <div id="player2-hp-bar" class="hp-bar" style="width: 100%;"></div>
+                            <div class="hp-overlay-text">
+                                <span class="heart-icon">❤️</span> <span id="player2-hp">100</span> HP
+                            </div>
+                        </div>
+                    </div>
+                    <div class="character-card-visual" id="player2-character-card-visual"></div>
+                    <div class="character-info-bottom">
+                        <div class="character-name" id="player2-character-name"></div>
+                        <div class="character-stats" id="player2-character-stats"></div>
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
                     </div>
 
                     <!-- Player 2 Area -->
@@ -1125,8 +1300,16 @@
                 <button id="attack-button" class="game-button">Attack</button>
                 <button id="buff-button" class="game-button">Buff</button>
             </div>
+            <!-- Game Buttons -->
+            <div class="game-buttons-sidebar">
+                <button id="start-battle-button" class="game-button hidden">SAVAŞI BAŞLAT</button>
+                <button id="attack-button" class="game-button hidden">SALDIRI</button>
+                <button id="buff-button" class="game-button hidden">GÜÇLEN</button>
+                <button id="restart-button" class="game-button hidden">YENİDEN</button>
+            </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <!-- Battle Intro Screen -->
     <div id="battle-intro-screen">
@@ -1622,5 +1805,47 @@
         window.addEventListener('resize', managePlayer1UI);
 
     </script>
+=======
+    <!-- Link your JavaScript file here -->
+    <script src="arena_v3.js"></script>
+    <!--
+        IMPORTANT NOTE:
+        The HTML changes above have moved Player 1's (your) information to the top bar.
+        For this information to be displayed and updated correctly, you need to make the following changes in your "arena_v3.js" file:
+
+        1.  **NFT Image:** When you load Player 1's NFT image, assign this image to the `src` attribute of the `player1-avatar` element.
+            Example: `document.getElementById('player1-avatar').src = characterNFTImageURL;`
+
+        2.  **HP Update:** When Player 1's HP changes, update both the `width` style of the `player1-hp-bar-small` element and the text content of the `player1-hp-bar-text` element.
+            Example:
+            `document.getElementById('player1-hp-bar-small').style.width = newHP + '%';`
+            `document.getElementById('player1-hp-bar-text').textContent = newHP;` // Changed to only update number
+            Additionally, add/remove the 'low-hp' class based on HP percentage:
+            `document.getElementById('player1-hp-bar-small').classList.toggle('low-hp', newHP <= 30);`
+
+        3.  **Name Update:** When Player 1's name changes, update the text content of the `player1-name-bar` element.
+            Example: `document.getElementById('player1-name-bar').textContent = characterName;`
+
+        4.  **Stats Update:** When Player 1's level, ATK, DEF, and CRIT stats change, update the text content of the corresponding `span` elements (`player1-level-bar`, `player1-atk-bar`, `player1-def-bar`, `player1-crit-bar`).
+            Example:
+            `document.getElementById('player1-level-bar').textContent = characterLevel;`
+            `document.getElementById('player1-atk-bar').textContent = characterATK;`
+            `document.getElementById('player1-def-bar').textContent = characterDEF;`
+            `document.getElementById('player1-crit-bar').textContent = characterCRIT + '%';`
+
+        5.  **Item Icons Update:** If you have item data for player1, you can dynamically add item icons to the `player1-items-bar` element.
+            Example (inside updateUI or a dedicated function):
+            `const player1ItemsBar = document.getElementById('player1-items-bar');`
+            `player1ItemsBar.innerHTML = ''; // Clear existing items`
+            `player1.items.forEach(item => {`
+            `   const itemIconDiv = document.createElement('div');`
+            `   itemIconDiv.classList.add('player-bar-item-icon');`
+            `   itemIconDiv.textContent = item.icon; // Assuming item object has an 'icon' property (e.g., '⚡', '🛡️')`
+            `   player1ItemsBar.appendChild(itemIconDiv);`
+            `});`
+
+        When these updates are made, Player 1's information will be displayed correctly in the top bar, and HP drops during battle will also be reflected on this bar.
+    -->
+>>>>>>> parent of 7a10b92 (Update arena_v3.html)
 </body>
 </html>
